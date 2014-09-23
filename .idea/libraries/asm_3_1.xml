@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="asm-3.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/asm-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/jersey-bundle-1.18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
