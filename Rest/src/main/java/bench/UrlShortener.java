@@ -1,18 +1,13 @@
 package main.java.bench;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
-// The Java class will be hosted at the URI path "/shorten"
-@Path("/shorten")
+import javax.ws.rs.*;
+@Path("/")
 public class UrlShortener {
-    // The Java method will process HTTP GET requests
+
     @GET
-    // The Java method will produce content identified by the MIME Media type "text/plain"
     @Produces("text/plain")
-    public String getShorten() {
-        // Return some cliched textual content
-        return "Hello World";
+    @Path("{shorturl}")
+    public String redirect(@PathParam("shorturl") String shortUrl,@QueryParam("url") String longUrl) {
+        return "Redirect to " + shortUrl+" long="+longUrl;
     }
 }
