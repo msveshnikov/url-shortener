@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/asm-3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/jersey-bundle-1.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/couchdb4j-0.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-codec-1.9.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

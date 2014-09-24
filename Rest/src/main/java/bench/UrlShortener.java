@@ -1,18 +1,34 @@
 package main.java.bench;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import com.fourspaces.couchdb.Session;
 
-// The Java class will be hosted at the URI path "/shorten"
-@Path("/shorten")
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.List;
+
+@Path("/")
 public class UrlShortener {
-    // The Java method will process HTTP GET requests
+    Session dbSession;
+
     @GET
-    // The Java method will produce content identified by the MIME Media type "text/plain"
     @Produces("text/plain")
-    public String getShorten() {
-        // Return some cliched textual content
-        return "Hello World";
+    @Path("{shorturl}")
+    public Response redirect(@PathParam("shorturl") String shortUrl, @QueryParam("url") String longUrl) {
+        connectCouch();
+        if (shortUrl.equals("shorten")) {
+            if (longUrl != null)
+                return Response.status(Response.Status.OK).entity("Shortening long=" + longUrl).build();
+            else return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } else
+            return Response.status(Response.Status.MOVED_PERMANENTLY).entity("Redirect to " + shortUrl).build();
+    }
+
+    private void connectCouch() {
+        dbSession = new Session("localhost", 5984);
+        String dbname = "shortener";
+
+        List<String> listofdb = dbSession.getDatabaseNames();
+        if (!listofdb.contains(dbname))
+            dbSession.createDatabase(dbname);
     }
 }
