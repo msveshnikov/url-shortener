@@ -2,16 +2,19 @@
   <library name="libs">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/asm-3.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/jersey-bundle-1.18.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/couchdb4j-0.1.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-beanutils.jar!/" />
+      <root url="jar://C:/couchdb4j/lib/httpclient-4.0-beta2.jar!/" />
+      <root url="jar://C:/couchdb4j/lib/httpcore-4.0-beta2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-beanutils-1.8.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-codec-1.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-collections.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-lang.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-logging-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/ezmorph-1.0.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-httpclient-3.1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/json-lib-2.0-jdk15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-collections-3.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-lang-2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/couchdb4j.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/ezmorph-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/httpclient-4.0-beta2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/httpcore-4.0-beta3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/jersey-bundle-1.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Rest/web/WEB-INF/lib/json-lib-2.3-jdk15.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

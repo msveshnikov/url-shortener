@@ -7,6 +7,7 @@ Participated: Oleg Razumov
 Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql
 
 1.Introduction
+==============
 
 Implement REST-service that provides the URL shortening/expanding functionality like bit.ly
 Functional requirements
@@ -37,6 +38,7 @@ Additional requirements:
 
 
 2. Web interface
+================
 
 Simple web-page that allows to construct shortening request.
 Personalized history:

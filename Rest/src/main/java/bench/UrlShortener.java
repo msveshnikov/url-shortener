@@ -4,14 +4,18 @@ import com.fourspaces.couchdb.Database;
 import com.fourspaces.couchdb.Document;
 import com.fourspaces.couchdb.Session;
 import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -38,7 +42,7 @@ public class UrlShortener {
     }
 
     private Response redirect(String shortUrl) throws Exception {
-        JSONObject d = findById(shortback(shortUrl));
+        JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
         return Response.status(Response.Status.MOVED_PERMANENTLY).entity(URLEncoder.encode(longUrl, "ASCII")).build();
     }
@@ -49,7 +53,7 @@ public class UrlShortener {
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
         int nextId = getMax() + 1;
         doc.put("myid", nextId);
-        String shortened = shorturl(nextId);
+        String shortened = charCode(nextId);
         doc.put("short", shortened);
         doc.put("long", decoded);
         db.saveDocument(doc);
@@ -59,7 +63,7 @@ public class UrlShortener {
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int BASE = ALPHABET.length();
 
-    private String shorturl(int id) {
+    private String charCode(int id) {
         StringBuilder sb = new StringBuilder();
         while (id > 0) {
             sb.append(ALPHABET.charAt(id % BASE));
@@ -68,7 +72,7 @@ public class UrlShortener {
         return sb.reverse().toString();
     }
 
-    private int shortback(String shortUrl) {
+    private int charDecode(String shortUrl) {
         int num = 0;
         for (int i = 0, len = shortUrl.length(); i < len; i++) {
             num = num * BASE + ALPHABET.indexOf(shortUrl.charAt(i));
@@ -90,20 +94,17 @@ public class UrlShortener {
     }
 
     private JSONObject getJSON(String url) throws Exception {
-        HttpClient httpclient = new HttpClient();
-        org.apache.commons.httpclient.HttpMethod method = new GetMethod(url);
-        try {
-            int statusCode = httpclient.executeMethod(method);
-            if (statusCode != HttpStatus.SC_OK) {
-                throw new Exception("getJSON failed: " + method.getStatusLine());
-            }
-            return JSONObject.fromObject(new String(method.getResponseBody()));
-        } finally {
-            method.releaseConnection();
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = httpclient.execute(get);
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new Exception("getJSON failed: " + response.getStatusLine());
         }
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        return JSONObject.fromObject(responseString);
     }
 
-    private void createView() {
+    private void createView() throws IOException {
         try {
             Document d = db.getDocument("_design/couchview");
             if (d != null) db.deleteDocument(d);
@@ -116,7 +117,7 @@ public class UrlShortener {
         db.saveDocument(doc);
     }
 
-    private void connectCouch() {
+    private void connectCouch() throws IOException {
         dbSession = new Session("localhost", 5984);
         String dbname = "shortener";
         List<String> listofdb = dbSession.getDatabaseNames();
