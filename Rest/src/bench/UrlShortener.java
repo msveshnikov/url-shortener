@@ -1,8 +1,9 @@
-package main.java.bench;
+package bench;
 
 import com.fourspaces.couchdb.Database;
 import com.fourspaces.couchdb.Document;
 import com.fourspaces.couchdb.Session;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -30,6 +31,7 @@ public class UrlShortener {
     @Path("{shorturl}")
     public Response Main(@PathParam("shorturl") String shortUrl, @QueryParam("url") String longUrl, @Context UriInfo ui) {
         try {
+            if (shortUrl.equals("favicon.ico")) return null;
             connectCouch();
             if (shortUrl.equals("shorten")) {
                 String base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() + ":" + ui.getBaseUri().getPort();
@@ -44,8 +46,8 @@ public class UrlShortener {
     private Response redirect(String shortUrl) throws Exception {
         JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
-        if (!longUrl.substring(1,4).equals("http"))
-            longUrl="http://"+longUrl;
+        if (longUrl.length()<4 || !longUrl.substring(1, 4).equals("http"))
+            longUrl = "http://" + longUrl;
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
 
@@ -84,7 +86,8 @@ public class UrlShortener {
 
     private int getMax() throws Exception {
         JSONObject jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?startkey=2000000000&descending=true&limit=1");
-        return jsonObject.getJSONArray("rows").getJSONObject(0).getInt("key");
+        JSONArray rows = jsonObject.getJSONArray("rows");
+        return rows.size() == 0 ? 10000 : rows.getJSONObject(0).getInt("key");
     }
 
     private JSONObject findById(int myid) throws Exception {
@@ -125,8 +128,9 @@ public class UrlShortener {
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);
+            createView();
         }
         db = dbSession.getDatabase(dbname);
-        createView();
+
     }
 }
