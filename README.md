@@ -5,7 +5,9 @@ URL shortener service
 DevLead & PM: Alexey Remnev
 Participated: Oleg Razumov
 Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql
-Introduction
+
+1.Introduction
+
 Implement REST-service that provides the URL shortening/expanding functionality like bit.ly
 Functional requirements
 REST interface
@@ -23,20 +25,27 @@ Expand shortened URL.
 Path: if not equals “/shorten” - treat as a short URL
 Effect: expand into long url from database, redirect to this URL
 Return code: 301, Location=<longurl>
+
 URL shortening algo
 See this for reference, or any other proper shortening/expanded techniques.
+
 Storage
-Any storage that supports K/V data model.
+    Any storage that supports K/V data model.
 
 Additional requirements:
-should support sharding/clustering for HL/BD.
-Web interface
+    should support sharding/clustering for HL/BD.
+
+
+2. Web interface
+
 Simple web-page that allows to construct shortening request.
 Personalized history:
 page to authenticate using Google
 after authentication bind all shorten requests to the user
 page showing list of all shortened urls by this user
-Technical requirements
+
+3. Technical requirements
+
 Implementation language (one of): java, python, ruby, node
 Self contained unit test are must
 Storage (one of): mysql, mongo, cassandra, redis
