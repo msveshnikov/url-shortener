@@ -16,7 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.util.List;
 
 
@@ -44,7 +44,9 @@ public class UrlShortener {
     private Response redirect(String shortUrl) throws Exception {
         JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
-        return Response.status(Response.Status.MOVED_PERMANENTLY).entity(URLEncoder.encode(longUrl, "ASCII")).build();
+        if (!longUrl.substring(1,4).equals("http"))
+            longUrl="http://"+longUrl;
+        return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
 
     private Response shorten(String longUrl, String base) throws Exception {
