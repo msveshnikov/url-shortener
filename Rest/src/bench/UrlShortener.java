@@ -46,7 +46,7 @@ public class UrlShortener {
     private Response redirect(String shortUrl) throws Exception {
         JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
-        if (longUrl.length()<4 || !longUrl.substring(1, 4).equals("http"))
+        if (longUrl.length() < 4 || !longUrl.substring(1, 4).equals("http"))
             longUrl = "http://" + longUrl;
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
@@ -55,7 +55,7 @@ public class UrlShortener {
         if (longUrl == null) throw new Exception("url param not set");
         Document doc = new Document();
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
-        int nextId = getMax() + 1;
+        int nextId = Math.max(10000000, getMax() + 1);
         doc.put("myid", nextId);
         String shortened = charCode(nextId);
         doc.put("short", shortened);
@@ -103,23 +103,26 @@ public class UrlShortener {
         HttpGet get = new HttpGet(url);
         HttpResponse response = httpclient.execute(get);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception("getJSON failed: " + response.getStatusLine());
+            throw new Exception("getJSON failed: " + response.getStatusLine() + "\nURL=" + url);
         }
         String responseString = new BasicResponseHandler().handleResponse(response);
         return JSONObject.fromObject(responseString);
     }
 
     private void createView() throws IOException {
+        System.out.println("creating view");
         try {
             Document d = db.getDocument("_design/couchview");
             if (d != null) db.deleteDocument(d);
         } catch (Exception e) {
+            System.out.println("exception in deleting view");
         }
         Document doc = new Document();
         doc.setId("_design/couchview");
         String str = "{\"autoinc\": {\"map\": \"function(doc) { emit(doc.myid, null) } \"}}";
         doc.put("views", str);
         db.saveDocument(doc);
+        System.out.println("view created");
     }
 
     private void connectCouch() throws IOException {
@@ -128,9 +131,8 @@ public class UrlShortener {
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);
-            createView();
         }
         db = dbSession.getDatabase(dbname);
-
+        createView();
     }
 }
