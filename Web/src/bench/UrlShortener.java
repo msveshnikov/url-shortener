@@ -24,6 +24,7 @@ import java.util.List;
 @Path("/")
 public class UrlShortener {
     private Database db;
+    final static String dbname = "shortener";
 
     @GET
     @Produces("text/plain")
@@ -97,7 +98,7 @@ public class UrlShortener {
         else throw new Exception("No such URL found");
     }
 
-    private JSONObject getJSON(String url) throws Exception {
+    public static JSONObject getJSON(String url) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet get = new HttpGet(url);
         HttpResponse response = httpclient.execute(get);
@@ -126,7 +127,6 @@ public class UrlShortener {
 
     private void connectCouch() throws IOException {
         Session dbSession = new Session("localhost", 5984);
-        String dbname = "shortener";
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);

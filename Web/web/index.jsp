@@ -1,8 +1,7 @@
 <%@page import="bench.GoogleAuthHelper" %>
+<%@ page import="bench.ShortenServlet" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<link rel="stylesheet" type="text/css" href="shortener/styles.css"/>
 
 <html>
 <head>
@@ -14,7 +13,10 @@
             margin: 1em;
         }
 
-        .message { color: red; text-align: left; }
+        .message {
+            color: red;
+            text-align: left;
+        }
 
         .oauthDemo a {
             display: block;
@@ -54,9 +56,10 @@
                  * required for constructing a google login url.
                  */
                 final GoogleAuthHelper helper = new GoogleAuthHelper();
+                final ShortenServlet servlet = new ShortenServlet();
 
-                if (request.getParameter("code") == null
-                        || request.getParameter("state") == null) {
+                if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
+                        || request.getParameter("state") == null)) {
 
 				/*
 				 * initial visit to the page
@@ -74,7 +77,6 @@
 
                     session.removeAttribute("state");
 
-                    out.println("<pre>");
 				/*
 				 * Executes after google redirects to the callback url.
 				 * Please note that the state request parameter is for convenience to differentiate
@@ -84,20 +86,20 @@
 				 * the json representation of the authenticated user's information.
 				 * At this point you should parse and persist the info.
 				 */
+                    session.setAttribute("userinfo", helper.getUserInfoJson(request.getParameter("code")));
 
-                    out.println(helper.getUserInfoJson(request.getParameter("code")));
-
-                    out.println("</pre>");
                 }
+
+                if (session.getAttribute("userinfo") != null)
+                    servlet.PrintPreviousShorts(session, out);
             %>
         </div>
 
 <form
-        action="shortener/result.jsp"
-        name="shortenUrl" id="unAuthShortenForm">
+        action="/shortener/result.jsp"
+        name="shortenUrl">
     <input id="shorten_url" name="url" type="text" class="text"
-           placeholder="Paste a link to shorten it" value="" autocomplete="off"
-            />
+           placeholder="Paste a link to shorten it" value="" autocomplete="off"/>
     <input id="shorten_btn" type="submit" class="btn blue-btn square" value="Shorten"/>
 </form>
 </span>
