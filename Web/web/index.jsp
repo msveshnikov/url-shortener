@@ -2,7 +2,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" type="text/css" href="styles.css"/>
+<link rel="stylesheet" type="text/css" href="shortener/styles.css"/>
 
 <html>
 <head>
@@ -14,6 +14,8 @@
             margin: 1em;
         }
 
+        .message { color: red; text-align: left; }
+
         .oauthDemo a {
             display: block;
             border-style: solid;
@@ -21,10 +23,10 @@
             border-width: 1px 2px 2px 1px;
             background: #cc2;
             color: #555;
-            line-height: 1;
+            line-height: 2;
             text-align: center;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 900;
             width: 10em;
         }
 
@@ -91,7 +93,7 @@
         </div>
 
 <form
-        action="result.jsp"
+        action="shortener/result.jsp"
         name="shortenUrl" id="unAuthShortenForm">
     <input id="shorten_url" name="url" type="text" class="text"
            placeholder="Paste a link to shorten it" value="" autocomplete="off"

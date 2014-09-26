@@ -6,6 +6,8 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="lib">
           <element id="library" level="project" name="libs" />
+          <element id="library" level="project" name="asm:asm:3.1" />
+          <element id="library" level="project" name="net.sf.ezmorph:ezmorph:1.0.4" />
         </element>
       </element>
     </root>

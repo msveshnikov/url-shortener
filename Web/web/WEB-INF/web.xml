@@ -3,4 +3,39 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <servlet>
+        <servlet-name>home</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>home</servlet-name>
+        <url-pattern>/shortener/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>result</servlet-name>
+        <jsp-file>/result.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>result</servlet-name>
+        <url-pattern>/shortener/result.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Jersey</servlet-name>
+        <servlet-class>
+            com.sun.jersey.spi.container.servlet.ServletContainer
+        </servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>bench</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

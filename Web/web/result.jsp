@@ -1,7 +1,7 @@
 <%@ page import="bench.ShortenServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" type="text/css" href="styles.css"/>
+<link rel="stylesheet" type="text/css" href="shortener/styles.css"/>
 
 <html>
 <head>
