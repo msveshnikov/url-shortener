@@ -3,6 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Web_archive</output-path>
     <root id="archive" name="Web_archive.war">
       <element id="artifact" artifact-name="Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="libs" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>
