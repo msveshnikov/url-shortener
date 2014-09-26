@@ -10,7 +10,6 @@ import java.util.List;
  * Created by msveshnikov on 24.09.2014.
  */
 public class Test {
-    private Session dbSession;
 
     public static void main(String[] args) throws IOException {
         new Test().connectCouch();
@@ -24,7 +23,7 @@ public class Test {
         int i = jsonObject.getJSONArray("rows").getJSONObject(0).getInt("key");
         System.out.println(i);
 
-        dbSession = new Session("localhost", 5984);
+        Session dbSession = new Session("localhost", 5984);
         String dbname = "shortener";
 
         List<String> listofdb = dbSession.getDatabaseNames();

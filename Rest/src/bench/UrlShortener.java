@@ -23,8 +23,7 @@ import java.util.List;
 
 @Path("/")
 public class UrlShortener {
-    Session dbSession;
-    Database db;
+    private Database db;
 
     @GET
     @Produces("text/plain")
@@ -126,7 +125,7 @@ public class UrlShortener {
     }
 
     private void connectCouch() throws IOException {
-        dbSession = new Session("localhost", 5984);
+        Session dbSession = new Session("localhost", 5984);
         String dbname = "shortener";
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {

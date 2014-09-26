@@ -9,16 +9,16 @@
 </head>
 
 <body>
-<font face="Verdana">
+<span style="font-family: Verdana; ">
 <h3 class="message"> Shorten result</h3>
 
-<font size="2" color="green">
+<span style="color: green; ">
     Original URL: <%= request.getParameter("url") %>
     <br>
     <br>
     Short URL: <a href="<%= ShortenServlet.getShort(request.getParameter("url")) %>"><%= ShortenServlet.getShort(request.getParameter("url")) %></a>
-</font>
-</font>
+</span>
+</span>
 
 </body>
 </html>
