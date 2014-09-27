@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShortenServlet {
-    private Database db;
     final static String dbname = "users";
+    private Database db;
 
     public ShortenServlet() throws IOException {
         Session dbSession = new Session("localhost", 5984);
@@ -45,8 +45,8 @@ public class ShortenServlet {
         db.saveDocument(doc);
     }
 
-    private List<String> findByUserId(String userId) throws Exception {
-        JSONObject result = UrlShortener.getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=\\\"" + userId + "\\\"");
+    private List<String> historyByUserId(String userId) throws Exception {
+        JSONObject result = UrlShortener.getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=%22" + userId + "%22");
         JSONArray arr = result.getJSONArray("rows");
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < arr.size(); i++) {
@@ -64,24 +64,30 @@ public class ShortenServlet {
             throw new Exception("REST service failed: " + response.getStatusLine() + "\nURL=" + url);
         }
         String shorturl = new BasicResponseHandler().handleResponse(response);
+        saveShort(url, session, shorturl);
+        return shorturl;
+    }
 
+    private void saveShort(String url, HttpSession session, String shorturl) throws IOException {
         String userinfo = (String) session.getAttribute("userinfo");
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
             Document doc = new Document();
-            //doc.setId(userId);
             doc.put("userid", userId);
             doc.put("short", shorturl);
             doc.put("long", url);
             db.saveDocument(doc);
         }
-        return shorturl;
     }
 
     public void PrintPreviousShorts(HttpSession session, JspWriter out) throws Exception {
         String userinfo = (String) session.getAttribute("userinfo");
         String userId = JSONObject.fromObject(userinfo).getString("id");
-        for (String url : findByUserId(userId)) {
+        String name = JSONObject.fromObject(userinfo).getString("name");
+        String picture = JSONObject.fromObject(userinfo).getString("picture");
+        out.println("<img src=\"" + picture + "\"  height=\"42\" width=\"42\">");
+        out.println("Welcome, " + name + "<br><br>");
+        for (String url : historyByUserId(userId)) {
             out.println("<a href='" + url + "'>" + url + "</a><br>");
         }
     }

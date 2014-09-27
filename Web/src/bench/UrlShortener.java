@@ -23,8 +23,21 @@ import java.util.List;
 
 @Path("/")
 public class UrlShortener {
-    private Database db;
     final static String dbname = "shortener";
+    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int BASE = ALPHABET.length();
+    private Database db;
+
+    public static JSONObject getJSON(String url) throws Exception {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = httpclient.execute(get);
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new Exception("getJSON failed: " + response.getStatusLine() + "\nURL=" + url);
+        }
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        return JSONObject.fromObject(responseString);
+    }
 
     @GET
     @Produces("text/plain")
@@ -43,7 +56,7 @@ public class UrlShortener {
         }
     }
 
-    private Response redirect(String shortUrl) throws Exception {
+    Response redirect(String shortUrl) throws Exception {
         JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
         if (longUrl.length() < 4 || !longUrl.substring(1, 4).equals("http"))
@@ -51,7 +64,7 @@ public class UrlShortener {
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
 
-    private Response shorten(String longUrl, String base) throws Exception {
+    Response shorten(String longUrl, String base) throws Exception {
         if (longUrl == null) throw new Exception("url param not set");
         Document doc = new Document();
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
@@ -64,10 +77,7 @@ public class UrlShortener {
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
-    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int BASE = ALPHABET.length();
-
-    private String charCode(int id) {
+    String charCode(int id) {
         StringBuilder sb = new StringBuilder();
         while (id > 0) {
             sb.append(ALPHABET.charAt(id % BASE));
@@ -76,7 +86,7 @@ public class UrlShortener {
         return sb.reverse().toString();
     }
 
-    private int charDecode(String shortUrl) {
+    int charDecode(String shortUrl) {
         int num = 0;
         for (int i = 0, len = shortUrl.length(); i < len; i++) {
             num = num * BASE + ALPHABET.indexOf(shortUrl.charAt(i));
@@ -84,13 +94,13 @@ public class UrlShortener {
         return num;
     }
 
-    private int getMax() throws Exception {
+    int getMax() throws Exception {
         JSONObject jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?startkey=2000000000&descending=true&limit=1");
         JSONArray rows = jsonObject.getJSONArray("rows");
         return rows.size() == 0 ? 10000 : rows.getJSONObject(0).getInt("key");
     }
 
-    private JSONObject findById(int myid) throws Exception {
+    JSONObject findById(int myid) throws Exception {
         JSONObject jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?key="
                 + myid + "&include_docs=true");
         if (jsonObject.getJSONArray("rows").size() != 0)
@@ -98,34 +108,20 @@ public class UrlShortener {
         else throw new Exception("No such URL found");
     }
 
-    public static JSONObject getJSON(String url) throws Exception {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet get = new HttpGet(url);
-        HttpResponse response = httpclient.execute(get);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception("getJSON failed: " + response.getStatusLine() + "\nURL=" + url);
-        }
-        String responseString = new BasicResponseHandler().handleResponse(response);
-        return JSONObject.fromObject(responseString);
-    }
-
-    private void createView() throws IOException {
-        System.out.println("creating view");
+    void createView() throws IOException {
         try {
             Document d = db.getDocument("_design/couchview");
             if (d != null) db.deleteDocument(d);
         } catch (Exception e) {
-            System.out.println("exception in deleting view");
         }
         Document doc = new Document();
         doc.setId("_design/couchview");
         String str = "{\"autoinc\": {\"map\": \"function(doc) { emit(doc.myid, null) } \"}}";
         doc.put("views", str);
         db.saveDocument(doc);
-        System.out.println("view created");
     }
 
-    private void connectCouch() throws IOException {
+    void connectCouch() throws IOException {
         Session dbSession = new Session("localhost", 5984);
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
