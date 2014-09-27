@@ -44,10 +44,8 @@ public final class GoogleAuthHelper {
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     // end google authentication constants
-
-    private String stateToken;
-
     private final GoogleAuthorizationCodeFlow flow;
+    private String stateToken;
 
     /**
      * Constructor initializes the Google Authorization Code Flow with CLIENT ID, SECRET, and SCOPE
@@ -95,7 +93,6 @@ public final class GoogleAuthHelper {
         final GenericUrl url = new GenericUrl(USER_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
         request.getHeaders().setContentType("application/json");
-        final String jsonIdentity = request.execute().parseAsString();
-        return jsonIdentity;
+        return request.execute().parseAsString();
     }
 }

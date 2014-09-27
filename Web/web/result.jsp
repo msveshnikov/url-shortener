@@ -1,4 +1,4 @@
-<%@ page import="bench.ShortenServlet" %>
+<%@ page import="bench.ShortenHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -28,7 +28,7 @@
             text-align: center;
             text-decoration: none;
             font-weight: 700;
-            font-size: 12;
+            font-size: 12px;
             width: 20em;
         }
     </style>
@@ -36,12 +36,12 @@
 
 <%
 
-    final ShortenServlet servlet = new ShortenServlet();
+    final ShortenHelper servlet = new ShortenHelper();
     String shorturl = servlet.getShort(request.getParameter("url"), session);
 %>
 
 <body>
-<span style="font-family: Verdana; ">
+<span style="font-family: Verdana">
 <h3 class="message"> Shorten result</h3>
 
 

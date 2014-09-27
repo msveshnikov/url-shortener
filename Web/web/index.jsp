@@ -1,5 +1,5 @@
 <%@ page import="bench.GoogleAuthHelper" %>
-<%@ page import="bench.ShortenServlet" %>
+<%@ page import="bench.ShortenHelper" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -43,7 +43,7 @@
             text-align: center;
             text-decoration: none;
             font-weight: 700;
-            font-size: 12;
+            font-size: 12px;
             width: 20em;
         }
     </style>
@@ -61,7 +61,7 @@
          * required for constructing a google login url.
          */
         final GoogleAuthHelper helper = new GoogleAuthHelper();
-        final ShortenServlet servlet = new ShortenServlet();
+        final ShortenHelper shortener = new ShortenHelper();
 
         if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
                 || request.getParameter("state") == null)) {
@@ -99,7 +99,7 @@
 <div class="history">
     <%
         if (session.getAttribute("userinfo") != null)
-            servlet.PrintPreviousShorts(session, out);
+            shortener.PrintPreviousShorts(session, out);
     %>
 </div>
 

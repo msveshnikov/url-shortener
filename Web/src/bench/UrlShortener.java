@@ -31,6 +31,7 @@ public class UrlShortener {
     public static JSONObject getJSON(String url) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet get = new HttpGet(url);
+        get.setHeader("Accept", "application/json");
         HttpResponse response = httpclient.execute(get);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
             throw new Exception("getJSON failed: " + response.getStatusLine() + "\nURL=" + url);
@@ -47,7 +48,9 @@ public class UrlShortener {
             if (shortUrl.equals("favicon.ico")) return null;
             connectCouch();
             if (shortUrl.equals("shorten")) {
-                String base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() + ":" + ui.getBaseUri().getPort();
+                String base = "";
+                if (ui != null)
+                    base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() + ":" + ui.getBaseUri().getPort();
                 return shorten(longUrl, base);
             } else
                 return redirect(shortUrl);
@@ -59,7 +62,7 @@ public class UrlShortener {
     Response redirect(String shortUrl) throws Exception {
         JSONObject d = findById(charDecode(shortUrl));
         String longUrl = d.getString("long");
-        if (longUrl.length() < 4 || !longUrl.substring(1, 4).equals("http"))
+        if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
             longUrl = "http://" + longUrl;
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
@@ -97,7 +100,7 @@ public class UrlShortener {
     int getMax() throws Exception {
         JSONObject jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?startkey=2000000000&descending=true&limit=1");
         JSONArray rows = jsonObject.getJSONArray("rows");
-        return rows.size() == 0 ? 10000 : rows.getJSONObject(0).getInt("key");
+        return rows.size() == 0 ? 10000000 : rows.getJSONObject(0).getInt("key");
     }
 
     JSONObject findById(int myid) throws Exception {
