@@ -1,0 +1,11 @@
+Package: shortener
+Version: 1.0-1
+Architecture: all
+Maintainer: Max Sveshnikov <max@unknown>
+Installed-Size: 5621
+Depends: tomcat7, couchdb
+Section: unknown
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: This is URL shortener web application
+ After installation, please go to http://localhost:8080/shortener

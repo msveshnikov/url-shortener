@@ -1,0 +1,5 @@
+shortener (1.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Max Sveshnikov <max@unknown>  Sat, 27 Sep 2014 22:11:00 +0700

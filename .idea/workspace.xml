@@ -10,14 +10,7 @@
     <bookmark url="file://$PROJECT_DIR$/Web/src/bench/UrlShortener.java" line="105" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a71c6c3-7c9f-4876-81ba-b5f92971a1b7" name="Default" comment="Web working, tests added">
-      <change type="MOVED" beforePath="C:\url-shortener\Web\src\bench\ShortenServlet.java" afterPath="$PROJECT_DIR$/Web/src/bench/ShortenHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/src/bench/GoogleAuthHelper.java" afterPath="$PROJECT_DIR$/Web/src/bench/GoogleAuthHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/src/bench/UrlShortener.java" afterPath="$PROJECT_DIR$/Web/src/bench/UrlShortener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/tests/bench/UrlShortenerTest.java" afterPath="$PROJECT_DIR$/Web/tests/bench/UrlShortenerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/Web.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Web.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/web/index.jsp" afterPath="$PROJECT_DIR$/Web/web/index.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/web/result.jsp" afterPath="$PROJECT_DIR$/Web/web/result.jsp" />
+    <list default="true" id="4a71c6c3-7c9f-4876-81ba-b5f92971a1b7" name="Default" comment="Tests done">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="UrlShortener.iws" />
@@ -85,8 +78,8 @@
       <file leaf-file-name="UrlShortener.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Web/src/bench/UrlShortener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5110357" vertical-offset="1395" max-vertical-offset="1984">
-              <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.37521222" vertical-offset="1395" max-vertical-offset="1984">
+              <caret line="119" column="38" selection-start-line="119" selection-start-column="38" selection-end-line="119" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -315,21 +308,21 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="121" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="122" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="138" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="139" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="144" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="146" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="816" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="825" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="142" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="143" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="131" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="132" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="138" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="139" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="808" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="818" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RecentsManager">
@@ -836,17 +829,21 @@
       <workItem from="1411721152671" duration="8643000" />
       <workItem from="1411730303644" duration="7143000" />
       <workItem from="1411749521039" duration="1709000" />
-      <workItem from="1411784303624" duration="8373000" />
+      <workItem from="1411784303624" duration="8480000" />
     </task>
     <task id="LOCAL-00001" summary="Web working, tests added">
       <created>1411785676780</created>
       <updated>1411785676780</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Tests done">
+      <created>1411793059458</created>
+      <updated>1411793059458</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78963000" />
+    <option name="totallyTimeSpent" value="79070000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1320" height="784" extended-state="6" />
@@ -908,7 +905,8 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="Web working, tests added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Web working, tests added" />
+    <MESSAGE value="Tests done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tests done" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -916,14 +914,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Web/src/bench/UrlShortener.java</url>
-          <line>115</line>
-          <properties />
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -1361,8 +1351,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Web/src/bench/UrlShortener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5110357" vertical-offset="1395" max-vertical-offset="1984">
-          <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.37521222" vertical-offset="1395" max-vertical-offset="1984">
+          <caret line="119" column="38" selection-start-line="119" selection-start-column="38" selection-end-line="119" selection-end-column="38" />
           <folding />
         </state>
       </provider>

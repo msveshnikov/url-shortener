@@ -1,0 +1,16 @@
+Source: shortener
+Section: unknown
+Priority: optional
+Maintainer: Max Sveshnikov <max@unknown>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/shortener.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/shortener.git;a=summary
+
+Package: shortener
+Architecture: all
+Depends: tomcat7, couchdb
+Description: This is URL shortener web application
+ After installation, please go to http://localhost:8080/shortener
+ 
