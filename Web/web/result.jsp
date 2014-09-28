@@ -8,7 +8,8 @@
 
     <style>
         body {
-            font-family: Verdana;
+            font-family: monospace;
+            font-size: 16px;
             margin: 1em;
         }
 
@@ -41,7 +42,7 @@
 %>
 
 <body>
-<span style="font-family: Verdana">
+
 <h3 class="message"> Shorten result</h3>
 
 
@@ -57,8 +58,6 @@
     <br><br>
     <a href="/shortener">Home page</a>
 
-
-</span>
 
 </body>
 </html>

@@ -9,7 +9,8 @@
 
     <style>
         body {
-            font-family: Verdana;
+            font-family: monospace;
+            font-size: 16px;
             margin: 1em;
         }
 
@@ -50,7 +51,7 @@
 
 </head>
 <body>
-<span style="font-family: Verdana">
+
 
 <h3 class="message"> URL Shortener v1.0</h3>
 
@@ -104,15 +105,13 @@
 </div>
 
 
-        <form
-                action="/shortener/result.jsp"
-                name="shortenUrl">
-            <input name="url" type="text"
-                   placeholder="Paste a link to shorten it" value=""/>
-            <input type="submit" value="Shorten"/>
-        </form>
-
-</span>
+<form
+        action="/shortener/result.jsp"
+        name="shortenUrl">
+    <input name="url" type="text"
+           placeholder="Paste a link to shorten it" value=""/>
+    <input type="submit" value="Shorten"/>
+</form>
 
 </body>
 </html>

@@ -25,7 +25,7 @@ import java.util.List;
 public class UrlShortener {
     final static String dbname = "shortener";
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int BASE = ALPHABET.length();
+    private static final long BASE = ALPHABET.length();
     private Database db;
 
     public static JSONObject getJSON(String url) throws Exception {
@@ -51,16 +51,24 @@ public class UrlShortener {
                 String base = "";
                 if (ui != null)
                     base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() + ":" + ui.getBaseUri().getPort();
-                return shorten(longUrl, base);
+                return shorten2(longUrl, base);
             } else
-                return redirect(shortUrl);
+                return redirect2(shortUrl);
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
     Response redirect(String shortUrl) throws Exception {
-        JSONObject d = findById(charDecode(shortUrl));
+        JSONObject d = findById((int) charDecode(shortUrl));
+        String longUrl = d.getString("long");
+        if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
+            longUrl = "http://" + longUrl;
+        return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
+    }
+
+    Response redirect2(String shortUrl) throws Exception {
+        Document d = db.getDocument(shortUrl);
         String longUrl = d.getString("long");
         if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
             longUrl = "http://" + longUrl;
@@ -80,17 +88,37 @@ public class UrlShortener {
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
-    String charCode(int id) {
+    Response shorten2(String longUrl, String base) throws Exception {
+        if (longUrl == null) throw new Exception("url param not set");
+        Document doc = new Document();
+        String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
+        String shortened = charCode(Math.abs(hash(longUrl) % 50000000000l));
+        doc.setId(shortened);
+        doc.put("long", decoded);
+        db.saveDocument(doc);
+        return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
+    }
+
+    private long hash(String longUrl) {
+        long h = 1125899906842597L; // prime
+        int len = longUrl.length();
+        for (int i = 0; i < len; i++) {
+            h = 31 * h + longUrl.charAt(i);
+        }
+        return h;
+    }
+
+    String charCode(long id) {
         StringBuilder sb = new StringBuilder();
         while (id > 0) {
-            sb.append(ALPHABET.charAt(id % BASE));
+            sb.append(ALPHABET.charAt((int) (id % BASE)));
             id /= BASE;
         }
         return sb.reverse().toString();
     }
 
-    int charDecode(String shortUrl) {
-        int num = 0;
+    long charDecode(String shortUrl) {
+        long num = 0;
         for (int i = 0, len = shortUrl.length(); i < len; i++) {
             num = num * BASE + ALPHABET.indexOf(shortUrl.charAt(i));
         }
@@ -129,8 +157,9 @@ public class UrlShortener {
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);
+            createView();
         }
         db = dbSession.getDatabase(dbname);
-        createView();
+
     }
 }
