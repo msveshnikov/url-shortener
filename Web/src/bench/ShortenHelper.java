@@ -32,7 +32,7 @@ public class ShortenHelper {
         createView();
     }
 
-    private void createView() throws IOException {
+    void createView() throws IOException {
         try {
             Document d = db.getDocument("_design/couchview");
             if (d != null) db.deleteDocument(d);
@@ -45,7 +45,7 @@ public class ShortenHelper {
         db.saveDocument(doc);
     }
 
-    private List<String> historyByUserId(String userId) throws Exception {
+    List<String> historyByUserId(String userId) throws Exception {
         JSONObject result = UrlShortener.getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=%22" + userId + "%22");
         JSONArray arr = result.getJSONArray("rows");
         List<String> list = new ArrayList<String>();
@@ -68,7 +68,7 @@ public class ShortenHelper {
         return shorturl;
     }
 
-    private void saveShort(String url, HttpSession session, String shorturl) throws IOException {
+    void saveShort(String url, HttpSession session, String shorturl) throws IOException {
         String userinfo = (String) session.getAttribute("userinfo");
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");

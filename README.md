@@ -15,6 +15,7 @@ Implement REST-service that provides the URL shortening/expanding functionality 
 Functional requirements
 
 REST interface
+
     GET /shorten
     Shorten specified URL.
     Parameters:

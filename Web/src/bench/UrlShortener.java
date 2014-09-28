@@ -79,7 +79,7 @@ public class UrlShortener {
         if (longUrl == null) throw new Exception("url param not set");
         Document doc = new Document();
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
-        int nextId = Math.max(10000000, getMax() + 1);
+        int nextId = getMax() + 1;
         doc.put("myid", nextId);
         String shortened = charCode(nextId);
         doc.put("short", shortened);
@@ -126,9 +126,15 @@ public class UrlShortener {
     }
 
     int getMax() throws Exception {
-        JSONObject jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?startkey=2000000000&descending=true&limit=1");
+        JSONObject jsonObject;
+        try {
+            jsonObject = getJSON("http://localhost:5984/shortener/_design/couchview/_view/autoinc?startkey=2000000000&descending=true&limit=1");
+        } catch (Exception e) {
+            createView();
+            return 1;
+        }
         JSONArray rows = jsonObject.getJSONArray("rows");
-        return rows.size() == 0 ? 10000000 : rows.getJSONObject(0).getInt("key");
+        return rows.size() == 0 ? 1 : rows.getJSONObject(0).getInt("key");
     }
 
     JSONObject findById(int myid) throws Exception {
@@ -160,6 +166,5 @@ public class UrlShortener {
             createView();
         }
         db = dbSession.getDatabase(dbname);
-
     }
 }
