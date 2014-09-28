@@ -36,9 +36,8 @@
 </head>
 
 <%
-
     final ShortenHelper servlet = new ShortenHelper();
-    String shorturl = servlet.getShort(request.getParameter("url"), session);
+    String shorturl = servlet.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"));
 %>
 
 <body>

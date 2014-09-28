@@ -100,7 +100,7 @@
 <div class="history">
     <%
         if (session.getAttribute("userinfo") != null)
-            shortener.PrintPreviousShorts(session, out);
+            shortener.PrintPreviousShorts((String) session.getAttribute("userinfo"), out);
     %>
 </div>
 

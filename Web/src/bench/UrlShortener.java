@@ -146,11 +146,6 @@ public class UrlShortener {
     }
 
     void createView() throws IOException {
-        try {
-            Document d = db.getDocument("_design/couchview");
-            if (d != null) db.deleteDocument(d);
-        } catch (Exception e) {
-        }
         Document doc = new Document();
         doc.setId("_design/couchview");
         String str = "{\"autoinc\": {\"map\": \"function(doc) { emit(doc.myid, null) } \"}}";
@@ -163,7 +158,9 @@ public class UrlShortener {
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);
+            db = dbSession.getDatabase(dbname);
             createView();
+            return;
         }
         db = dbSession.getDatabase(dbname);
     }

@@ -1,15 +1,17 @@
-url-shortener
-=============
+URL shortener service
+=====================
+
 Description: This is URL shortener web application
+
 After Ubuntu deb installation, please go to http://localhost:8080/shortener
 
-URL shortener service
 DevLead & PM: Alexey Remnev
 Participated: Oleg Razumov
-Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql
+
+Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql, couchdb
 
 1. Introduction
-==============
+===============
 
 Implement REST-service that provides the URL shortening/expanding functionality like bit.ly
 Functional requirements
@@ -35,7 +37,7 @@ URL shortening algo
     See this for reference, or any other proper shortening/expanded techniques.
 
 Storage
-    Any storage that supports K/V data model.
+    CouchDb.
 
 Additional requirements:
     should support sharding/clustering for HL/BD.
@@ -45,7 +47,9 @@ Additional requirements:
 ================
 
 Simple web-page that allows to construct shortening request.
+
 Personalized history:
+
     page to authenticate using Google
     after authentication bind all shorten requests to the user
     page showing list of all shortened urls by this user
@@ -53,12 +57,14 @@ Personalized history:
 3. Technical requirements
 =========================
 
-Implementation language (one of): java, python, ruby, node
-Self contained unit test are must
-Storage (one of): mysql, mongo, cassandra, redis
-Web server (one of): nginx, apache
+Implementation language: java
 
-Packaging (one of): RPM or DEB file with all system dependencies + installation manual
+Self contained unit test are must.
+
+Web server:  apache tomcat.
+
+Packaging: DEB file with all system dependencies + installation manual.
+
 Benchmarking tool: generate shorten and expand requests with urls length of 8-1000 characters e.g. using ab - calculate time spent for serving 10000 of such requests.
 
 Time bounds
@@ -66,5 +72,5 @@ Up to 2 weeks for junior dev.
 
 Resources
     Redmine project: https://redmine.thumbtack.net/projects/url-shortener-service
-    Git repository: git@thumbtack.beanstalkapp.com:/url-shortener.git
-    create and use a separate branch named as your account
+    Git repository: https://github.com/msveshnikov/url-shortener
+

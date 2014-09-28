@@ -12,7 +12,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,17 +26,14 @@ public class ShortenHelper {
         List<String> listofdb = dbSession.getDatabaseNames();
         if (!listofdb.contains(dbname)) {
             dbSession.createDatabase(dbname);
+            db = dbSession.getDatabase(dbname);
+            createView();
+            return;
         }
         db = dbSession.getDatabase(dbname);
-        createView();
     }
 
     void createView() throws IOException {
-        try {
-            Document d = db.getDocument("_design/couchview");
-            if (d != null) db.deleteDocument(d);
-        } catch (Exception e) {
-        }
         Document doc = new Document();
         doc.setId("_design/couchview");
         String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
@@ -55,7 +51,7 @@ public class ShortenHelper {
         return list;
     }
 
-    public String getShort(String url, HttpSession session) throws Exception {
+    public String getShort(String url, String userinfo) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         String encoded = java.net.URLEncoder.encode(url, "ASCII");
         HttpGet get = new HttpGet("http://localhost:8080/shorten?url=" + encoded);
@@ -64,12 +60,11 @@ public class ShortenHelper {
             throw new Exception("REST service failed: " + response.getStatusLine() + "\nURL=" + url);
         }
         String shorturl = new BasicResponseHandler().handleResponse(response);
-        saveShort(url, session, shorturl);
+        saveShort(url, userinfo, shorturl);
         return shorturl;
     }
 
-    void saveShort(String url, HttpSession session, String shorturl) throws IOException {
-        String userinfo = (String) session.getAttribute("userinfo");
+    void saveShort(String url, String userinfo, String shorturl) throws IOException {
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
             Document doc = new Document();
@@ -80,8 +75,7 @@ public class ShortenHelper {
         }
     }
 
-    public void PrintPreviousShorts(HttpSession session, JspWriter out) throws Exception {
-        String userinfo = (String) session.getAttribute("userinfo");
+    public void PrintPreviousShorts(String userinfo, JspWriter out) throws Exception {
         String userId = JSONObject.fromObject(userinfo).getString("id");
         String name = JSONObject.fromObject(userinfo).getString("name");
         String picture = JSONObject.fromObject(userinfo).getString("picture");
