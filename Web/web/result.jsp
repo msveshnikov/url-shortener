@@ -1,34 +1,62 @@
-<%@ page import="bench.ShortenServlet" %>
+<%@ page import="bench.ShortenHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" type="text/css" href="shortener/styles.css"/>
 
 <html>
 <head>
     <title>Result</title>
+
+    <style>
+        body {
+            font-family: monospace;
+            font-size: 16px;
+            margin: 1em;
+        }
+
+        .message {
+            color: red;
+            text-align: left;
+        }
+
+        .history a {
+            display: block;
+            border-style: solid;
+            border-color: #bbb #888 #666 #aaa;
+            border-width: 1px 2px 2px 1px;
+            background: #6c6;
+            color: #555;
+            line-height: 2;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 12px;
+            width: 20em;
+        }
+    </style>
 </head>
 
 <%
-
-    final ShortenServlet servlet = new ShortenServlet();
-    String shorturl = servlet.getShort(request.getParameter("url"), session);
+    final ShortenHelper servlet = new ShortenHelper();
+    String shorturl = servlet.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"), request.getHeader("host"));
 %>
 
 <body>
-<span style="font-family: Verdana; ">
+
 <h3 class="message"> Shorten result</h3>
 
-<span style="color: green; ">
+
     Original URL: <%= request.getParameter("url") %>
     <br>
     <br>
-    Short URL: <a href="<%= shorturl %>"><%= shorturl %>
-</a>
 
+        <div class="history">
+            Short URL: <a href="<%= shorturl %>"><%= shorturl %>
+
+        </a>
+        </div>
+    <br><br>
     <a href="/shortener">Home page</a>
 
-</span>
-</span>
 
 </body>
 </html>

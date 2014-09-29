@@ -1,5 +1,5 @@
-<%@page import="bench.GoogleAuthHelper" %>
-<%@ page import="bench.ShortenServlet" %>
+<%@ page import="bench.GoogleAuthHelper" %>
+<%@ page import="bench.ShortenHelper" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -9,7 +9,8 @@
 
     <style>
         body {
-            font-family: Verdana;
+            font-family: monospace;
+            font-size: 16px;
             margin: 1em;
         }
 
@@ -18,7 +19,7 @@
             text-align: left;
         }
 
-        .oauthDemo a {
+        .login a {
             display: block;
             border-style: solid;
             border-color: #bbb #888 #666 #aaa;
@@ -29,53 +30,58 @@
             text-align: center;
             text-decoration: none;
             font-weight: 900;
-            width: 10em;
+            width: 14em;
         }
 
-        .oauthDemo pre {
-            background: #ccc;
+        .history a {
+            display: block;
+            border-style: solid;
+            border-color: #bbb #888 #666 #aaa;
+            border-width: 1px 2px 2px 1px;
+            background: #6c6;
+            color: #555;
+            line-height: 2;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 12px;
+            width: 20em;
         }
-
-        .oauthDemo a:active {
-            border-color: #666 #aaa #bbb #888;
-            border-width: 2px 1px 1px 2px;
-            color: #000;
-        }
-
     </style>
 
 </head>
 <body>
-<span style="font-family: Verdana; ">
+
+
 <h3 class="message"> URL Shortener v1.0</h3>
 
-    	<div class="oauthDemo">
-            <%
-                /*
-                 * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
-                 * required for constructing a google login url.
-                 */
-                final GoogleAuthHelper helper = new GoogleAuthHelper();
-                final ShortenServlet servlet = new ShortenServlet();
+<div class="login">
+    <%
+        /*
+         * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
+         * required for constructing a google login url.
+         */
+        final GoogleAuthHelper helper = new GoogleAuthHelper();
+        final ShortenHelper shortener = new ShortenHelper();
 
-                if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
-                        || request.getParameter("state") == null)) {
+        if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
+                || request.getParameter("state") == null)) {
 
 				/*
 				 * initial visit to the page
 				 */
-                    out.println("<a href='" + helper.buildLoginUrl()
-                            + "'>Login with Google+</a><br><br>");
+            out.println("<a href='" + helper.buildLoginUrl()
+                    + "'>Login with Google+</a><br><br>");
 
 				/*
 				 * set the secure state token in session to be able to track what we sent to google
 				 */
-                    session.setAttribute("state", helper.getStateToken());
+            session.setAttribute("state", helper.getStateToken());
 
-                } else if (request.getParameter("code") != null && request.getParameter("state") != null
-                        && request.getParameter("state").equals(session.getAttribute("state"))) {
+        } else if (request.getParameter("code") != null && request.getParameter("state") != null
+                && request.getParameter("state").equals(session.getAttribute("state"))) {
 
-                    session.removeAttribute("state");
+            session.removeAttribute("state");
 
 				/*
 				 * Executes after google redirects to the callback url.
@@ -86,23 +92,26 @@
 				 * the json representation of the authenticated user's information.
 				 * At this point you should parse and persist the info.
 				 */
-                    session.setAttribute("userinfo", helper.getUserInfoJson(request.getParameter("code")));
+            session.setAttribute("userinfo", helper.getUserInfoJson(request.getParameter("code")));
 
-                }
+        }
+    %>
+</div>
+<div class="history">
+    <%
+        if (session.getAttribute("userinfo") != null)
+            shortener.PrintPreviousShorts((String) session.getAttribute("userinfo"), out);
+    %>
+</div>
 
-                if (session.getAttribute("userinfo") != null)
-                    servlet.PrintPreviousShorts(session, out);
-            %>
-        </div>
 
 <form
         action="/shortener/result.jsp"
         name="shortenUrl">
-    <input id="shorten_url" name="url" type="text" class="text"
-           placeholder="Paste a link to shorten it" value="" autocomplete="off"/>
-    <input id="shorten_btn" type="submit" class="btn blue-btn square" value="Shorten"/>
+    <input name="url" type="text"
+           placeholder="Paste a link to shorten it" value=""/>
+    <input type="submit" value="Shorten"/>
 </form>
-</span>
 
 </body>
 </html>
