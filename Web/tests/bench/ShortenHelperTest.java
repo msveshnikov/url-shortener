@@ -19,7 +19,7 @@ public class ShortenHelperTest {
 
     @Test
     public void testGetShort() throws Exception {
-        helper.getShort("www.mail.ru", "{  \"id\": \"2\"  }");
+        helper.getShort("www.mail.ru", "{  \"id\": \"2\"  }", "localhost");
     }
 
     @Test
