@@ -32,17 +32,12 @@ public final class GoogleAuthHelper {
      * Please provide a value for the CLIENT_SECRET constant before proceeding, set this up at https://code.google.com/apis/console/
      */
     private static final String CLIENT_SECRET = "x3jeqk1AlbQrkiW7-QFPJob0";
-
-    /**
-     * Callback URI that google will redirect to after successful authentication
-     */
-    private static final String CALLBACK_URI = "http://localhost:8080/shortener/index.jsp";
-
     // start google authentication constants
     private static final Iterable<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"));
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    public static String host = "localhost";
     // end google authentication constants
     private final GoogleAuthorizationCodeFlow flow;
     private String stateToken;
@@ -57,11 +52,18 @@ public final class GoogleAuthHelper {
     }
 
     /**
+     * Callback URI that google will redirect to after successful authentication
+     */
+    private String CALLBACK_URI() {
+        return "http://" + host + "/shortener/index.jsp";
+    }
+
+    /**
      * Builds a login URL based on client ID, secret, callback URI, and scope
      */
     public String buildLoginUrl() {
         final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
-        return url.setRedirectUri(CALLBACK_URI).setState(stateToken).build();
+        return url.setRedirectUri(CALLBACK_URI()).setState(stateToken).build();
     }
 
     /**
@@ -86,7 +88,7 @@ public final class GoogleAuthHelper {
      * @return JSON formatted user profile information
      */
     public String getUserInfoJson(final String authCode) throws IOException {
-        final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI).execute();
+        final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI()).execute();
         final Credential credential = flow.createAndStoreCredential(response, null);
         final HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
         // Make an authenticated request

@@ -63,6 +63,7 @@
          */
         final GoogleAuthHelper helper = new GoogleAuthHelper();
         final ShortenHelper shortener = new ShortenHelper();
+        GoogleAuthHelper.host = request.getHeader("host");
 
         if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
                 || request.getParameter("state") == null)) {

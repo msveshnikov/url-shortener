@@ -40,7 +40,7 @@ Storage
     CouchDb.
 
 Additional requirements:
-    should support sharding/clustering for HL/BD.
+    Should support sharding/clustering for HL/BD.
 
 
 2. Web interface
@@ -57,7 +57,7 @@ Personalized history:
 3. Technical requirements
 =========================
 
-Implementation language: java
+Implementation language: Java.
 
 Self contained unit test are must.
 

@@ -51,10 +51,10 @@ public class ShortenHelper {
         return list;
     }
 
-    public String getShort(String url, String userinfo, String host) throws Exception {
+    public String getShort(String url, String userinfo) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         String encoded = java.net.URLEncoder.encode(url, "ASCII");
-        HttpGet get = new HttpGet("http://" + host + "/shorten?url=" + encoded);
+        HttpGet get = new HttpGet("http://" + GoogleAuthHelper.host + "/shorten?url=" + encoded);
         HttpResponse response = httpclient.execute(get);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
             throw new Exception("REST service failed: " + response.getStatusLine() + "\nURL=" + url);
