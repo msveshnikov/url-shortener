@@ -1,0 +1,93 @@
+ab -c 10 -n 1000 http://localhost:8080/shorten?url=www.mail.ru 
+
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+
+
+Server Software:        Apache-Coyote/1.1
+Server Hostname:        localhost
+Server Port:            8080
+
+Document Path:          /shorten?url=www.mail.ru
+Document Length:        27 bytes
+
+Concurrency Level:      10
+Time taken for tests:   33.493 seconds
+Complete requests:      10000
+Failed requests:        0
+Write errors:           0
+Total transferred:      1550000 bytes
+HTML transferred:       270000 bytes
+Requests per second:    298.57 [#/sec] (mean)
+Time per request:       33.493 [ms] (mean)
+Time per request:       3.349 [ms] (mean, across all concurrent requests)
+Transfer rate:          45.19 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.3      0       1
+Processing:    15   33  16.6     29     309
+Waiting:       15   33  16.7     29     309
+Total:         16   33  16.7     29     309
+
+Percentage of the requests served within a certain time (ms)
+  50%     29
+  66%     31
+  75%     32
+  80%     34
+  90%     42
+  95%     53
+  98%     73
+  99%    102
+ 100%    309 (longest request)
+
+
+
+
+
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+
+
+Server Software:        Apache-Coyote/1.1
+Server Hostname:        localhost
+Server Port:            8080
+
+Document Path:          /shorten?url=www.mail.ruxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+Document Length:        28 bytes
+
+Concurrency Level:      10
+Time taken for tests:   30.165 seconds
+Complete requests:      10000
+Failed requests:        0
+Write errors:           0
+Total transferred:      1560000 bytes
+HTML transferred:       280000 bytes
+Requests per second:    331.51 [#/sec] (mean)
+Time per request:       30.165 [ms] (mean)
+Time per request:       3.016 [ms] (mean, across all concurrent requests)
+Transfer rate:          50.50 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.4      0      16
+Processing:    13   30  15.5     28     210
+Waiting:       13   30  15.5     28     210
+Total:         14   30  15.5     28     210
+
+Percentage of the requests served within a certain time (ms)
+  50%     28
+  66%     28
+  75%     29
+  80%     29
+  90%     30
+  95%     32
+  98%     66
+  99%    137
+ 100%    210 (longest request)
