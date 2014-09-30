@@ -4,9 +4,8 @@
 
 package bench;
 
-import com.fourspaces.couchdb.Database;
-import com.fourspaces.couchdb.Document;
-import com.fourspaces.couchdb.Session;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
@@ -15,6 +14,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.CouchDbInstance;
+import org.ektorp.http.StdHttpClient;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.impl.StdCouchDbInstance;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -22,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 
 @Path("/")
@@ -30,7 +33,8 @@ public class UrlShortener {
     final static String dbname = "shortener";
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final long BASE = ALPHABET.length();
-    private Database db;
+    ObjectMapper mapper = new ObjectMapper();
+    private CouchDbConnector db;
 
     public static JSONObject getJSON(String url) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
@@ -63,43 +67,43 @@ public class UrlShortener {
         }
     }
 
-    Response redirect(String shortUrl) throws Exception {
-        JSONObject d = findById((int) charDecode(shortUrl));
-        String longUrl = d.getString("long");
-        if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
-            longUrl = "http://" + longUrl;
-        return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
-    }
+//    Response redirect(String shortUrl) throws Exception {
+//        JSONObject d = findById((int) charDecode(shortUrl));
+//        String longUrl = d.getString("long");
+//        if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
+//            longUrl = "http://" + longUrl;
+//        return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
+//    }
 
     Response redirect2(String shortUrl) throws Exception {
-        Document d = db.getDocument(shortUrl);
-        String longUrl = d.getString("long");
+        ObjectNode d = db.get(ObjectNode.class, shortUrl);
+        String longUrl = d.get("long").asText();
         if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
             longUrl = "http://" + longUrl;
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
 
-    Response shorten(String longUrl, String base) throws Exception {
-        if (longUrl == null) throw new Exception("url param not set");
-        Document doc = new Document();
-        String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
-        int nextId = getMax() + 1;
-        doc.put("myid", nextId);
-        String shortened = charCode(nextId);
-        doc.put("short", shortened);
-        doc.put("long", decoded);
-        db.saveDocument(doc);
-        return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
-    }
+//    Response shorten(String longUrl, String base) throws Exception {
+//        if (longUrl == null) throw new Exception("url param not set");
+//        Document doc = new Document();
+//        String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
+//        int nextId = getMax() + 1;
+//        doc.put("myid", nextId);
+//        String shortened = charCode(nextId);
+//        doc.put("short", shortened);
+//        doc.put("long", decoded);
+//        db.saveDocument(doc);
+//        return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
+//    }
 
     Response shorten2(String longUrl, String base) throws Exception {
         if (longUrl == null) throw new Exception("url param not set");
-        Document doc = new Document();
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
         String shortened = charCode(Math.abs(hash(longUrl) % 50000000000l));
-        doc.setId(shortened);
+        ObjectNode doc = mapper.createObjectNode();
+        doc.put("_id", shortened);
         doc.put("long", decoded);
-        db.saveDocument(doc);
+        db.update(doc);
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
@@ -150,22 +154,18 @@ public class UrlShortener {
     }
 
     void createView() throws IOException {
-        Document doc = new Document();
-        doc.setId("_design/couchview");
         String str = "{\"autoinc\": {\"map\": \"function(doc) { emit(doc.myid, null) } \"}}";
+        ObjectNode doc = mapper.createObjectNode();
+        doc.put("_id", "_design/couchview");
         doc.put("views", str);
-        db.saveDocument(doc);
+        db.create(doc);
     }
 
     public void connectCouch() throws IOException {
-        Session dbSession = new Session("localhost", 5984);
-        List<String> listofdb = dbSession.getDatabaseNames();
-        if (!listofdb.contains(dbname)) {
-            dbSession.createDatabase(dbname);
-            db = dbSession.getDatabase(dbname);
-            createView();
-            return;
-        }
-        db = dbSession.getDatabase(dbname);
+        org.ektorp.http.HttpClient httpClient = new StdHttpClient.Builder().build();
+        CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
+        db = new StdCouchDbConnector(dbname, dbInstance);
+        db.createDatabaseIfNotExists();
+        //  createView();
     }
 }

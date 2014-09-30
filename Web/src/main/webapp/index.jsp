@@ -53,7 +53,7 @@
 <body>
 
 
-<h3 class="message"> URL Shortener v1.0</h3>
+<h3 class="message"> URL Shortener v1.1</h3>
 
 <div class="login">
     <%
