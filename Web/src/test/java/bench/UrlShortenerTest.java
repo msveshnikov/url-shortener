@@ -31,11 +31,6 @@ public class UrlShortenerTest {
     }
 
     @Test
-    public void testRedirect() throws Exception {
-
-    }
-
-    @Test
     public void testShorten() throws Exception {
         Response shorten = urlShortener.shorten("www.mail.ru", "");
         assertEquals(200, shorten.getStatus());
@@ -80,8 +75,4 @@ public class UrlShortenerTest {
         JSONObject obj = urlShortener.getJSON("http://api.geonames.org/weatherJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&username=demo");
     }
 
-    @Test
-    public void testCreateView() throws Exception {
-
-    }
 }
