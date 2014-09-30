@@ -1,5 +1,6 @@
 package bench;
 
+import bench.ShortenHelper;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -41,7 +41,7 @@ public class ShortenHelper {
         db.saveDocument(doc);
     }
 
-    List<String> historyByUserId(String userId) throws Exception {
+    public List<String> historyByUserId(String userId) throws Exception {
         JSONObject result = UrlShortener.getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=%22" + userId + "%22");
         JSONArray arr = result.getJSONArray("rows");
         List<String> list = new ArrayList<String>();
@@ -64,7 +64,7 @@ public class ShortenHelper {
         return shorturl;
     }
 
-    void saveShort(String url, String userinfo, String shorturl) throws IOException {
+    public void saveShort(String url, String userinfo, String shorturl) throws IOException {
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
             Document doc = new Document();
