@@ -1,44 +1,55 @@
+/*
+ * Copyright (c) 2014. Thumbtack Technologies
+ */
+
 package bench;
 
-import com.fourspaces.couchdb.Database;
-import com.fourspaces.couchdb.Document;
-import com.fourspaces.couchdb.Session;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.CouchDbInstance;
+import org.ektorp.http.StdHttpClient;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.impl.StdCouchDbInstance;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+class History {
+    @Column(name = "userid")
+    String userId;
+    @Column(name = "short")
+    String shortUrl;
+    @Column(name = "long")
+    String longUrl;
+}
+
 public class ShortenHelper {
     final static String dbname = "users";
-    private final Database db;
+    private final CouchDbConnector db;
 
     public ShortenHelper() throws IOException {
-        Session dbSession = new Session("localhost", 5984);
-        List<String> listofdb = dbSession.getDatabaseNames();
-        if (!listofdb.contains(dbname)) {
-            dbSession.createDatabase(dbname);
-            db = dbSession.getDatabase(dbname);
-            createView();
-            return;
-        }
-        db = dbSession.getDatabase(dbname);
+        org.ektorp.http.HttpClient httpClient = new StdHttpClient.Builder().url("http://localhost:5984").build();
+        CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
+        db = new StdCouchDbConnector(dbname, dbInstance);
+        db.createDatabaseIfNotExists();
     }
 
     void createView() throws IOException {
-        Document doc = new Document();
-        doc.setId("_design/couchview");
-        String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
-        doc.put("views", str);
-        db.saveDocument(doc);
+//        Document doc = new Document();
+//        doc.setId("_design/couchview");
+//        String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
+//        doc.put("views", str);
+        //   db.saveDocument(doc);
     }
 
     public List<String> historyByUserId(String userId) throws Exception {
@@ -52,10 +63,10 @@ public class ShortenHelper {
     }
 
     public String getShort(String url, String userinfo) throws Exception {
-        HttpClient httpclient = new DefaultHttpClient();
+        org.apache.http.client.HttpClient httpclient = new DefaultHttpClient();
         String encoded = java.net.URLEncoder.encode(url, "ASCII");
         HttpGet get = new HttpGet("http://" + GoogleAuthHelper.host + "/shorten?url=" + encoded);
-        HttpResponse response = httpclient.execute(get);
+        org.apache.http.HttpResponse response = httpclient.execute(get);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
             throw new Exception("REST service failed: " + response.getStatusLine() + "\nURL=" + url);
         }
@@ -67,11 +78,11 @@ public class ShortenHelper {
     public void saveShort(String url, String userinfo, String shorturl) throws IOException {
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
-            Document doc = new Document();
-            doc.put("userid", userId);
-            doc.put("short", shorturl);
-            doc.put("long", url);
-            db.saveDocument(doc);
+            History doc = new History();
+            doc.userId = userId;
+            doc.shortUrl = shorturl;
+            doc.longUrl = url;
+            db.update(doc);
         }
     }
 
@@ -86,19 +97,6 @@ public class ShortenHelper {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
