@@ -3,6 +3,10 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%--
+  ~ Copyright (c) 2014. Thumbtack Technologies
+  --%>
+
 <html>
 <head>
     <title>URL Shortener</title>
@@ -53,7 +57,7 @@
 <body>
 
 
-<h3 class="message"> URL Shortener v1.0</h3>
+<h3 class="message"> URL Shortener v1.2</h3>
 
 <div class="login">
     <%

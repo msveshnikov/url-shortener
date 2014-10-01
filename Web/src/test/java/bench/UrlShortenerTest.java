@@ -1,11 +1,15 @@
+/*
+ * Copyright (c) 2014. Thumbtack Technologies
+ */
+
 package bench;
 
-import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 
+import static bench.CouchHelper.getJSON;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -31,12 +35,6 @@ public class UrlShortenerTest {
     }
 
     @Test
-    public void testShorten() throws Exception {
-        Response shorten = urlShortener.shorten("www.mail.ru", "");
-        assertEquals(200, shorten.getStatus());
-    }
-
-    @Test
     public void testCharCode() throws Exception {
         assertEquals("b", urlShortener.charCode(1));
         assertEquals("", urlShortener.charCode(0));
@@ -56,23 +54,8 @@ public class UrlShortenerTest {
     }
 
     @Test
-    public void testGetMax() throws Exception {
-        int max = urlShortener.getMax();
-        assertTrue(max > 100);
-        JSONObject d = urlShortener.findById(max);
-        String longUrl = d.getString("long");
-        d.getString("short");
-        assertEquals(max, d.getInt("myid"));
-    }
-
-    @Test(expected = Exception.class)
-    public void testFindById() throws Exception {
-        JSONObject d = urlShortener.findById(-5);
-    }
-
-    @Test
     public void testGetJSON() throws Exception {
-        JSONObject obj = urlShortener.getJSON("http://api.geonames.org/weatherJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&username=demo");
+        getJSON("http://api.geonames.org/weatherJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&username=demo");
     }
 
 }

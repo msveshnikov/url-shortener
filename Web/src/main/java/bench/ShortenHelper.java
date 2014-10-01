@@ -1,8 +1,9 @@
+/*
+ * Copyright (c) 2014. Thumbtack Technologies
+ */
+
 package bench;
 
-import com.fourspaces.couchdb.Database;
-import com.fourspaces.couchdb.Document;
-import com.fourspaces.couchdb.Session;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
@@ -17,32 +18,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static bench.CouchHelper.*;
+
 public class ShortenHelper {
     final static String dbname = "users";
-    private final Database db;
 
     public ShortenHelper() throws IOException {
-        Session dbSession = new Session("localhost", 5984);
-        List<String> listofdb = dbSession.getDatabaseNames();
-        if (!listofdb.contains(dbname)) {
-            dbSession.createDatabase(dbname);
-            db = dbSession.getDatabase(dbname);
-            createView();
-            return;
-        }
-        db = dbSession.getDatabase(dbname);
+        createDatabase(dbname);
+        createView();
     }
 
     void createView() throws IOException {
-        Document doc = new Document();
-        doc.setId("_design/couchview");
+        JSONObject doc = new JSONObject();
+        doc.put("_id", "_design/couchview");
         String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
         doc.put("views", str);
-        db.saveDocument(doc);
+        createDocument(dbname, doc);
     }
 
     public List<String> historyByUserId(String userId) throws Exception {
-        JSONObject result = UrlShortener.getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=%22" + userId + "%22");
+        JSONObject result = getJSON("http://localhost:5984/users/_design/couchview/_view/userid?key=%22" + userId + "%22");
         JSONArray arr = result.getJSONArray("rows");
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < arr.size(); i++) {
@@ -67,11 +62,11 @@ public class ShortenHelper {
     public void saveShort(String url, String userinfo, String shorturl) throws IOException {
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
-            Document doc = new Document();
+            JSONObject doc = new JSONObject();
             doc.put("userid", userId);
             doc.put("short", shorturl);
             doc.put("long", url);
-            db.saveDocument(doc);
+            createDocument(dbname, doc);
         }
     }
 
