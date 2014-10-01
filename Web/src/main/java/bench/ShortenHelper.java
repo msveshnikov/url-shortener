@@ -33,7 +33,7 @@ public class ShortenHelper {
         CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
         db = new StdCouchDbConnector(dbname, dbInstance);
         db.createDatabaseIfNotExists();
-        //createView();
+        createView();
     }
 
     void createView() throws IOException {
@@ -41,7 +41,10 @@ public class ShortenHelper {
         ObjectNode doc = mapper.createObjectNode();
         doc.put("_id", "_design/couchview");
         doc.put("views", str);
-        db.create(doc);
+        try {
+            db.create(doc);
+        } catch (Exception e) {
+        }
     }
 
     public List<String> historyByUserId(String userId) throws Exception {

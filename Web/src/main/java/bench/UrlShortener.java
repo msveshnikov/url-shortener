@@ -100,10 +100,14 @@ public class UrlShortener {
         if (longUrl == null) throw new Exception("url param not set");
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
         String shortened = charCode(Math.abs(hash(longUrl) % 50000000000l));
+
         ObjectNode doc = mapper.createObjectNode();
         doc.put("_id", shortened);
         doc.put("long", decoded);
-        db.update(doc);
+        try {
+            db.create(doc);
+        } catch (Exception e) {
+        }
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
@@ -158,7 +162,10 @@ public class UrlShortener {
         ObjectNode doc = mapper.createObjectNode();
         doc.put("_id", "_design/couchview");
         doc.put("views", str);
-        db.create(doc);
+        try {
+            db.create(doc);
+        } catch (Exception e) {
+        }
     }
 
     public void connectCouch() throws IOException {
@@ -166,6 +173,6 @@ public class UrlShortener {
         CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
         db = new StdCouchDbConnector(dbname, dbInstance);
         db.createDatabaseIfNotExists();
-        //  createView();
+        createView();
     }
 }
