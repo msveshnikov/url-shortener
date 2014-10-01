@@ -75,8 +75,8 @@ public class ShortenHelper {
             String userId = JSONObject.fromObject(userinfo).getString("id");
             ObjectNode doc = mapper.createObjectNode();
             doc.put("userid", userId);
-            doc.put("shorturl", shorturl);
-            doc.put("longUrl", url);
+            doc.put("short", shorturl);
+            doc.put("long", url);
             db.create(doc);
         }
     }

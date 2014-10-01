@@ -100,7 +100,6 @@ public class UrlShortener {
         if (longUrl == null) throw new Exception("url param not set");
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
         String shortened = charCode(Math.abs(hash(longUrl) % 50000000000l));
-
         ObjectNode doc = mapper.createObjectNode();
         doc.put("_id", shortened);
         doc.put("long", decoded);
