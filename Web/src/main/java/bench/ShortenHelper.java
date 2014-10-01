@@ -17,14 +17,12 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.ektorp.support.View;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@View(name = "userid2", map = "function(doc) { emit(doc.userid, doc.short) }")
 public class ShortenHelper {
     final static String dbname = "users";
     private final CouchDbConnector db;
@@ -35,13 +33,18 @@ public class ShortenHelper {
         CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
         db = new StdCouchDbConnector(dbname, dbInstance);
         db.createDatabaseIfNotExists();
+        createView();
     }
 
     void createView() throws IOException {
-//        doc.setId("_design/couchview");
-//        String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
-//        doc.put("views", str);
-//           db.saveDocument(doc);
+        String str = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
+        ObjectNode doc = mapper.createObjectNode();
+        doc.put("_id", "_design/couchview");
+        doc.put("views", str);
+        try {
+            db.create(doc);
+        } catch (Exception e) {
+        }
     }
 
     public List<String> historyByUserId(String userId) throws Exception {

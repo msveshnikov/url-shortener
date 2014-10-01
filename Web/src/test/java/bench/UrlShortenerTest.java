@@ -29,12 +29,12 @@ public class UrlShortenerTest {
         assertEquals(301, redir.getStatus());
         assertEquals("http://www.mail.ru", redir.getMetadata().getFirst("Location").toString());
     }
-
-    @Test
-    public void testShorten() throws Exception {
-        Response shorten = urlShortener.shorten("www.mail.ru", "");
-        assertEquals(200, shorten.getStatus());
-    }
+//
+//    @Test
+//    public void testShorten() throws Exception {
+//        Response shorten = urlShortener.shorten("www.mail.ru", "");
+//        assertEquals(200, shorten.getStatus());
+//    }
 
     @Test
     public void testCharCode() throws Exception {
