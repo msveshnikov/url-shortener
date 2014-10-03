@@ -57,7 +57,8 @@
 <body>
 
 
-<h3 class="message"> URL Shortener v1.2</h3>
+<h3 class="message"> URL Shortener v.<%=ShortenHelper.class.getPackage().getImplementationVersion() %>
+</h3>
 
 <div class="login">
     <%
