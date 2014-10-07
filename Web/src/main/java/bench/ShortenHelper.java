@@ -23,7 +23,7 @@ import static bench.CouchHelper.*;
 public class ShortenHelper {
     final static String dbname = "users";
 
-    public ShortenHelper() throws IOException {
+    private void prepareDb() throws IOException {
         createDatabase(dbname);
         createView();
     }
@@ -60,6 +60,11 @@ public class ShortenHelper {
     }
 
     public void saveShort(String url, String userinfo, String shorturl) throws IOException {
+        try {
+            prepareDb();
+        } catch (Exception e) {
+            return;
+        }
         if (userinfo != null) {
             String userId = JSONObject.fromObject(userinfo).getString("id");
             JSONObject doc = new JSONObject();
@@ -71,6 +76,11 @@ public class ShortenHelper {
     }
 
     public void PrintPreviousShorts(String userinfo, JspWriter out) throws Exception {
+        try {
+            prepareDb();
+        } catch (Exception e) {
+            return;
+        }
         String userId = JSONObject.fromObject(userinfo).getString("id");
         String name = JSONObject.fromObject(userinfo).getString("name");
         String picture = JSONObject.fromObject(userinfo).getString("picture");

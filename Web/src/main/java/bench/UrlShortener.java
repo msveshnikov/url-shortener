@@ -10,7 +10,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.net.URI;
 
 import static bench.CouchHelper.*;
@@ -19,8 +18,8 @@ import static bench.CouchHelper.*;
 @Path("/")
 public class UrlShortener {
     final static String dbname = "shortener";
-    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final long BASE = ALPHABET.length();
+
+    private final ICoder coder = new Coder();
 
     @GET
     @Produces("text/plain")
@@ -28,7 +27,7 @@ public class UrlShortener {
     public Response Main(@PathParam("shorturl") String shortUrl, @QueryParam("url") String longUrl, @Context UriInfo ui) {
         try {
             if (shortUrl.equals("favicon.ico")) return null;
-            connectCouch();
+            //  connectCouch();
             if (shortUrl.equals("shorten")) {
                 String base = "";
                 if (ui != null)
@@ -53,10 +52,14 @@ public class UrlShortener {
         if (longUrl == null) throw new Exception("url param not set");
         JSONObject doc = new JSONObject();
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
-        String shortened = charCode(Math.abs(hash(longUrl) % 50000000000l));
-        doc.put("_id", shortened);
-        doc.put("long", decoded);
-        createDocument(dbname, doc);
+        String shortened = coder.charCode(Math.abs(hash(longUrl) % 50000000000l));
+        try {
+            createDatabase(dbname);
+            doc.put("_id", shortened);
+            doc.put("long", decoded);
+            createDocument(dbname, doc);
+        } catch (Exception e) {
+        }
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
@@ -70,23 +73,12 @@ public class UrlShortener {
     }
 
     String charCode(long id) {
-        StringBuilder sb = new StringBuilder();
-        while (id > 0) {
-            sb.append(ALPHABET.charAt((int) (id % BASE)));
-            id /= BASE;
-        }
-        return sb.reverse().toString();
+        return coder.charCode(id);
     }
 
     long charDecode(String shortUrl) {
-        long num = 0;
-        for (int i = 0, len = shortUrl.length(); i < len; i++) {
-            num = num * BASE + ALPHABET.indexOf(shortUrl.charAt(i));
-        }
-        return num;
+        return coder.charDecode(shortUrl);
     }
 
-    public void connectCouch() throws IOException {
-        createDatabase(dbname);
-    }
+
 }
