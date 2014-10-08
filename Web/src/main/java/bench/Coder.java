@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2014 Thumbtack Technologies
+ */
+
 package bench;
 
 public class Coder implements ICoder {

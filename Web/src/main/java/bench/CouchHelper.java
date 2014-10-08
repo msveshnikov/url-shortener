@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Thumbtack Technologies
+ * Copyright (c) 2014 Thumbtack Technologies
  */
 
 package bench;
