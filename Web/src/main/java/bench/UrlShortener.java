@@ -21,12 +21,12 @@ import static bench.CouchHelper.*;
 public class UrlShortener {
     final static String dbname = "shortener";
     private final ShortenerDAO dao = new CouchDAOImpl(dbname);
-    private final ICoder coder = new Coder();
+    private final Coder coder = new Coder();
 
     @GET
     @Produces("text/plain")
     @Path("{shorturl}")
-    public Response Main(@PathParam("shorturl") String shortUrl, @QueryParam("url") String longUrl, @Context UriInfo ui) {
+    public Response main(@PathParam("shorturl") String shortUrl, @QueryParam("url") String longUrl, @Context UriInfo ui) {
         try {
             if (shortUrl.equals("favicon.ico")) return null;
             if (shortUrl.equals("shorten")) {

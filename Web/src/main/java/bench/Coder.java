@@ -4,11 +4,10 @@
 
 package bench;
 
-public class Coder implements ICoder {
+public class Coder {
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final long BASE = ALPHABET.length();
 
-    @Override
     public String charCode(long id) {
         StringBuilder sb = new StringBuilder();
         while (id > 0) {
@@ -18,7 +17,7 @@ public class Coder implements ICoder {
         return sb.reverse().toString();
     }
 
-    @Override
+
     public long charDecode(String shortUrl) {
         long num = 0;
         for (int i = 0, len = shortUrl.length(); i < len; i++) {
