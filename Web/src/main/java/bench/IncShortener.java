@@ -4,7 +4,7 @@
 
 package bench;
 
-public class ShortenerInc implements IShortener {
+public class IncShortener implements Shortener {
     @Override
     public String shorten(String longUrl) {
         return null;

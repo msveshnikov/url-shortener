@@ -4,7 +4,7 @@
 
 package bench;
 
-public interface IShortener {
+public interface Shortener {
     String shorten(String longUrl);
 
     String lengthen(String shortUrl);

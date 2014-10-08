@@ -4,7 +4,7 @@
 
 package bench;
 
-public class ShortenerHash implements IShortener {
+public class HashShortener implements Shortener {
     @Override
     public String shorten(String longUrl) {
         return null;
