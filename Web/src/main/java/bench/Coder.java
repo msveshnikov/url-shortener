@@ -23,12 +23,4 @@ public class Coder implements ICoder {
         return num;
     }
 
-    private long hash(String longUrl) {
-        long h = 1125899906842597L; // prime
-        int len = longUrl.length();
-        for (int i = 0; i < len; i++) {
-            h = 31 * h + longUrl.charAt(i);
-        }
-        return h;
-    }
 }

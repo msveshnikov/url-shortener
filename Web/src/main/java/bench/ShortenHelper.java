@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ShortenHelper {
 
     public String getShort(String url, String userinfo) throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
-        String encoded = java.net.URLEncoder.encode(url, "ASCII");
+        String encoded = URLEncoder.encode(url, "ASCII");
         HttpGet get = new HttpGet("http://" + GoogleAuthHelper.host + "/shorten?url=" + encoded);
         HttpResponse response = httpclient.execute(get);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
