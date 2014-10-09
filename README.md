@@ -10,6 +10,12 @@ Participated: Oleg Razumov
 
 Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql, couchdb
 
++ 3-х слойная архитектура: Presentation, Service, DAO. Зависимости между слоями через интерфейсы.
++ Нужна конфигурация. В коде никаких литералов, неизменяемые - константами, изменяемые - в конфигурации.
+- Тест на моке DAO
+- Логирование slf4j + logback/log4j
+
+
 1. Introduction
 ===============
 

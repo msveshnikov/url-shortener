@@ -1,10 +1,10 @@
 <%@ page import="bench.GoogleAuthHelper" %>
-<%@ page import="bench.ShortenHelper" %>
+<%@ page import="net.sf.json.JSONObject" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%--
-  ~ Copyright (c) 2014. Thumbtack Technologies
+  ~ Copyright (c) 2014 Thumbtack Technologies
   --%>
 
 <html>
@@ -57,7 +57,7 @@
 <body>
 
 
-<h3 class="message"> URL Shortener v1.4
+<h3 class="message"> URL Shortener v1.5
 </h3>
 
 <div class="login">
@@ -66,23 +66,23 @@
          * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
          * required for constructing a google login url.
          */
-        final GoogleAuthHelper helper = new GoogleAuthHelper();
-        final ShortenHelper shortener = new ShortenHelper();
+        final bench.JspHelper helper = new bench.JspHelper(getServletConfig().getServletContext());
+        final GoogleAuthHelper auth = new GoogleAuthHelper();
         GoogleAuthHelper.host = request.getHeader("host");
 
         if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
                 || request.getParameter("state") == null)) {
 
-				/*
-				 * initial visit to the page
-				 */
-            out.println("<a href='" + helper.buildLoginUrl()
-                    + "'>Login with Google+</a><br><br>");
-
-				/*
-				 * set the secure state token in session to be able to track what we sent to google
-				 */
-            session.setAttribute("state", helper.getStateToken());
+            /*
+             * initial visit to the page
+             */
+    %>
+    <a href='<%= auth.buildLoginUrl() %>'>Login with Google+</a><br><br>
+    <%
+            /*
+             * set the secure state token in session to be able to track what we sent to google
+             */
+            session.setAttribute("state", auth.getStateToken());
 
         } else if (request.getParameter("code") != null && request.getParameter("state") != null
                 && request.getParameter("state").equals(session.getAttribute("state"))) {
@@ -98,15 +98,30 @@
 				 * the json representation of the authenticated user's information.
 				 * At this point you should parse and persist the info.
 				 */
-            session.setAttribute("userinfo", helper.getUserInfoJson(request.getParameter("code")));
-
+            session.setAttribute("userinfo", auth.getUserInfoJson(request.getParameter("code")));
         }
     %>
 </div>
 <div class="history">
     <%
-        if (session.getAttribute("userinfo") != null)
-            shortener.PrintPreviousShorts((String) session.getAttribute("userinfo"), out);
+        Object userinfo = session.getAttribute("userinfo");
+        if (userinfo != null) {
+            String userId = JSONObject.fromObject(userinfo).getString("id");
+            String name = JSONObject.fromObject(userinfo).getString("name");
+            String picture = JSONObject.fromObject(userinfo).getString("picture");
+    %>
+    <img src="<%= picture %>" height="42" width="42">
+    Welcome,  <%= name %> <br><br>
+    <%
+        if (helper.dao.isConnected()) {
+            for (String url : helper.dao.historyByUserId(userId)) {
+    %>
+    <a href="<%= url %>"><%= url %>
+    </a> <br>
+    <%
+                }
+            }
+        }
     %>
 </div>
 

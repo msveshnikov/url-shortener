@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2014. Thumbtack Technologies
+  ~ Copyright (c) 2014 Thumbtack Technologies
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -11,7 +11,7 @@
     <groupId>net.thumbtack</groupId>
     <artifactId>url-shortener</artifactId>
     <packaging>war</packaging>
-    <version>1.4</version>
+    <version>1.5</version>
 
 
     <dependencies>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
