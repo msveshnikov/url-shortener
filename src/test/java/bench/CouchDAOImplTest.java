@@ -8,7 +8,7 @@ public class CouchDAOImplTest {
 
     @Before
     public void setUp() throws Exception {
-        dao=new CouchDAOImpl("shortener");
+        dao=new CouchDAOImpl("test");
     }
 
     @Test

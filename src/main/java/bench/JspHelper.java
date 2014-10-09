@@ -15,7 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-public class ShortenHelper {
+public class JspHelper {
     public final static String DBNAME = "users";//config
     public static final String REST_COMMAND = "/shorten?url=";//config
 

@@ -2,13 +2,13 @@ package bench;
 
 import org.junit.Before;
 
-public class ShortenHelperTest {
+public class JspHelperTest {
 
-    private ShortenHelper helper;
+    private JspHelper helper;
 
     @Before
     public void setUp() throws Exception {
-        helper = new ShortenHelper();
+        helper = new JspHelper();
     }
 
 //    @Test

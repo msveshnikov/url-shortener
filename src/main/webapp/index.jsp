@@ -1,5 +1,4 @@
 <%@ page import="bench.GoogleAuthHelper" %>
-<%@ page import="bench.ShortenHelper" %>
 <%@ page import="net.sf.json.JSONObject" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -69,8 +68,8 @@
      * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
      * required for constructing a google login url.
      */
-    final GoogleAuthHelper helper = new GoogleAuthHelper();
-    final ShortenHelper shortener = new ShortenHelper();
+    final GoogleAuthHelper auth = new GoogleAuthHelper();
+    final bench.JspHelper helper = new bench.JspHelper();
     GoogleAuthHelper.host = request.getHeader("host");
 
     if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
@@ -79,12 +78,12 @@
 				/*
 				 * initial visit to the page
 				 */
-        out.println(A_HREF + helper.buildLoginUrl() + LOGIN_WITH_GOOGLE);
+        out.println(A_HREF + auth.buildLoginUrl() + LOGIN_WITH_GOOGLE);
 
 				/*
 				 * set the secure state token in session to be able to track what we sent to google
 				 */
-        session.setAttribute("state", helper.getStateToken());
+        session.setAttribute("state", auth.getStateToken());
 
     } else if (request.getParameter("code") != null && request.getParameter("state") != null
             && request.getParameter("state").equals(session.getAttribute("state"))) {
@@ -100,28 +99,28 @@
 				 * the json representation of the authenticated user's information.
 				 * At this point you should parse and persist the info.
 				 */
-        session.setAttribute("userinfo", helper.getUserInfoJson(request.getParameter("code")));
+        session.setAttribute("userinfo", auth.getUserInfoJson(request.getParameter("code")));
 
     }
 %>
 </div>
 <div class="history">
     <%
-        final String GOOGLE_ID = "id";
-        final String GOOGLE_NAME = "name";
-        final String GOOGLE_PICTURE = "picture";
-
         Object userinfo = session.getAttribute("userinfo");
         if (userinfo != null) {
-            String userId = JSONObject.fromObject(userinfo).getString(GOOGLE_ID);
-            String name = JSONObject.fromObject(userinfo).getString(GOOGLE_NAME);
-            String picture = JSONObject.fromObject(userinfo).getString(GOOGLE_PICTURE);
-
-            out.println("<img src=\"" + picture + "\"  height=\"42\" width=\"42\">");
-            out.println("Welcome, " + name + "<br><br>");
-            if (shortener.dao.isConnected()) {
-                for (String url : shortener.dao.historyByUserId(userId)) {
-                    out.println("<a href='" + url + "'>" + url + "</a><br>");
+            String userId = JSONObject.fromObject(userinfo).getString("id");
+            String name = JSONObject.fromObject(userinfo).getString("name");
+            String picture = JSONObject.fromObject(userinfo).getString("picture");
+    %>
+    <img src="<%= picture %>" height="42" width="42">
+    Welcome,  <%= name %> <br><br>
+    <%
+        if (helper.dao.isConnected()) {
+            for (String url : helper.dao.historyByUserId(userId)) {
+    %>
+    <a href="<%= url %>"><%= url %>
+    </a> <br>
+    <%
                 }
             }
         }

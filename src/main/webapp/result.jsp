@@ -1,6 +1,5 @@
-<%@ page import="bench.ShortenHelper" %>
+<%@ page import="bench.JspHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 
 <%--
   ~ Copyright (c) 2014 Thumbtack Technologies
@@ -40,27 +39,24 @@
 </head>
 
 <%
-    final ShortenHelper servlet = new ShortenHelper();
-    String shorturl = servlet.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"));
+    final JspHelper helper = new JspHelper();
+    String shorturl = helper.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"));
 %>
 
 <body>
 
 <h3 class="message"> Shorten result</h3>
 
+Original URL: <%= request.getParameter("url") %>
+<br>
+<br>
 
-    Original URL: <%= request.getParameter("url") %>
-    <br>
-    <br>
-
-        <div class="history">
-            Short URL: <a href="<%= shorturl %>"><%= shorturl %>
-
-        </a>
-        </div>
-    <br><br>
-    <a href="/shortener">Home page</a>
-
+<div class="history">
+    Short URL: <a href="<%= shorturl %>"><%= shorturl %>
+</a>
+</div>
+<br><br>
+<a href="/shortener">Home page</a>
 
 </body>
 </html>

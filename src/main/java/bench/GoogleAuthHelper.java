@@ -32,7 +32,7 @@ public final class GoogleAuthHelper {
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    public static String host;
+    public static String host="localhost:8080"; // for jUnit
 
     private final GoogleAuthorizationCodeFlow flow;
     private String stateToken;
