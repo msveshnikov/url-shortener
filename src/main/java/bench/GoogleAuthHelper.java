@@ -21,29 +21,19 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
 
-/**
- * A helper class for Google's OAuth2 authentication API.
- *
- * @author Matyas Danter
- * @version 20130224
- */
 public final class GoogleAuthHelper {
 
-    /**
-     * Please provide a value for the CLIENT_ID constant before proceeding, set this up at https://code.google.com/apis/console/
-     */
-    private static final String CLIENT_ID = "561935625736-ju9i1nsfdr8b65dnodfa7ufsdof88kgv.apps.googleusercontent.com";
-    /**
-     * Please provide a value for the CLIENT_SECRET constant before proceeding, set this up at https://code.google.com/apis/console/
-     */
-    private static final String CLIENT_SECRET = "x3jeqk1AlbQrkiW7-QFPJob0";
-    // start google authentication constants
+    public static final String CALLBACK = "/shortener/index.jsp"; //config
+    public static final String CLIENT_ID = "561935625736-ju9i1nsfdr8b65dnodfa7ufsdof88kgv.apps.googleusercontent.com";//config
+    public static final String CLIENT_SECRET = "x3jeqk1AlbQrkiW7-QFPJob0";//config
+
+    public static final String HTTP = "http://";
     private static final Collection<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"));
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    public static String host = "localhost";
-    // end google authentication constants
+    public static String host;
+
     private final GoogleAuthorizationCodeFlow flow;
     private String stateToken;
 
@@ -51,16 +41,15 @@ public final class GoogleAuthHelper {
      * Constructor initializes the Google Authorization Code Flow with CLIENT ID, SECRET, and SCOPE
      */
     public GoogleAuthHelper() {
-        flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
-                JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPE).build();
+        flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPE).build();
         generateStateToken();
     }
 
     /**
      * Callback URI that google will redirect to after successful authentication
      */
-    private String CALLBACK_URI() {
-        return "http://" + host + "/shortener/index.jsp";
+    private String callbackUri() {
+        return HTTP + host + CALLBACK;
     }
 
     /**
@@ -68,7 +57,7 @@ public final class GoogleAuthHelper {
      */
     public String buildLoginUrl() {
         final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
-        return url.setRedirectUri(CALLBACK_URI()).setState(stateToken).build();
+        return url.setRedirectUri(callbackUri()).setState(stateToken).build();
     }
 
     /**
@@ -93,7 +82,7 @@ public final class GoogleAuthHelper {
      * @return JSON formatted user profile information
      */
     public String getUserInfoJson(final String authCode) throws IOException {
-        final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI()).execute();
+        final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(callbackUri()).execute();
         final Credential credential = flow.createAndStoreCredential(response, null);
         final HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
         // Make an authenticated request
