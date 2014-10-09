@@ -61,34 +61,33 @@
 </h3>
 
 <div class="login">
-    <%! public static final String A_HREF = "<a href='";
-        public static final String LOGIN_WITH_GOOGLE = "'>Login with Google+</a><br><br>";
-    %><%
-    /*
-     * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
-     * required for constructing a google login url.
-     */
-    final GoogleAuthHelper auth = new GoogleAuthHelper();
-    final bench.JspHelper helper = new bench.JspHelper();
-    GoogleAuthHelper.host = request.getHeader("host");
+    <%
+        /*
+         * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
+         * required for constructing a google login url.
+         */
+        final bench.JspHelper helper = new bench.JspHelper(getServletConfig().getServletContext());
+        final GoogleAuthHelper auth = new GoogleAuthHelper();
+        GoogleAuthHelper.host = request.getHeader("host");
 
-    if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
-            || request.getParameter("state") == null)) {
+        if (session.getAttribute("userinfo") == null && (request.getParameter("code") == null
+                || request.getParameter("state") == null)) {
 
-				/*
-				 * initial visit to the page
-				 */
-        out.println(A_HREF + auth.buildLoginUrl() + LOGIN_WITH_GOOGLE);
+            /*
+             * initial visit to the page
+             */
+    %>
+    <a href='<%= auth.buildLoginUrl() %>'>Login with Google+</a><br><br>
+    <%
+            /*
+             * set the secure state token in session to be able to track what we sent to google
+             */
+            session.setAttribute("state", auth.getStateToken());
 
-				/*
-				 * set the secure state token in session to be able to track what we sent to google
-				 */
-        session.setAttribute("state", auth.getStateToken());
+        } else if (request.getParameter("code") != null && request.getParameter("state") != null
+                && request.getParameter("state").equals(session.getAttribute("state"))) {
 
-    } else if (request.getParameter("code") != null && request.getParameter("state") != null
-            && request.getParameter("state").equals(session.getAttribute("state"))) {
-
-        session.removeAttribute("state");
+            session.removeAttribute("state");
 
 				/*
 				 * Executes after google redirects to the callback url.
@@ -99,10 +98,9 @@
 				 * the json representation of the authenticated user's information.
 				 * At this point you should parse and persist the info.
 				 */
-        session.setAttribute("userinfo", auth.getUserInfoJson(request.getParameter("code")));
-
-    }
-%>
+            session.setAttribute("userinfo", auth.getUserInfoJson(request.getParameter("code")));
+        }
+    %>
 </div>
 <div class="history">
     <%

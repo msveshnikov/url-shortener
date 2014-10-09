@@ -8,7 +8,7 @@ public class CouchDAOImplTest {
 
     @Before
     public void setUp() throws Exception {
-        dao=new CouchDAOImpl("test");
+        dao = new CouchDAOImpl("test", "http://localhost:5984/");
     }
 
     @Test

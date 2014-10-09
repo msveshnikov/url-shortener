@@ -39,7 +39,7 @@
 </head>
 
 <%
-    final JspHelper helper = new JspHelper();
+    final JspHelper helper = new JspHelper(getServletConfig().getServletContext());
     String shorturl = helper.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"));
 %>
 

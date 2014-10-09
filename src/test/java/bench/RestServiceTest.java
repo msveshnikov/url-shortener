@@ -18,15 +18,13 @@ public class RestServiceTest {
 
     @Test
     public void testMain() throws Exception {
-        assertEquals(500, restService.main("abcd", "", null).getStatus());
-        Response shorten = restService.main("shorten", "www.mail.ru", null);
+        assertEquals(500, restService.main("abcd", "", null, null).getStatus());
+        Response shorten = restService.main("shorten", "www.mail.ru", null, null);
         assertEquals(200, shorten.getStatus());
         String s = (String) shorten.getEntity();
         assertTrue(s.length() > 3);
-        Response redir = restService.main(s.substring(1, s.length()), "", null);
+        Response redir = restService.main(s.substring(1, s.length()), "", null, null);
         assertEquals(301, redir.getStatus());
         assertEquals("http://www.mail.ru", redir.getMetadata().getFirst("Location").toString());
     }
-
-
 }

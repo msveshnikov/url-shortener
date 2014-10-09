@@ -23,17 +23,15 @@ import java.util.Collection;
 
 public final class GoogleAuthHelper {
 
-    public static final String CALLBACK = "/shortener/index.jsp"; //config
-    public static final String CLIENT_ID = "561935625736-ju9i1nsfdr8b65dnodfa7ufsdof88kgv.apps.googleusercontent.com";//config
-    public static final String CLIENT_SECRET = "x3jeqk1AlbQrkiW7-QFPJob0";//config
-
     public static final String HTTP = "http://";
     private static final Collection<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"));
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    public static String host="localhost:8080"; // for jUnit
-
+    public static String CALLBACK;
+    public static String CLIENT_ID;
+    public static String CLIENT_SECRET;
+    public static String host = "localhost:8080"; // for jUnit
     private final GoogleAuthorizationCodeFlow flow;
     private String stateToken;
 

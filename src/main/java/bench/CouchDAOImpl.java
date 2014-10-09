@@ -23,7 +23,6 @@ import java.util.List;
 
 public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
 
-    public static final String COUCH_URL = "http://localhost:5984/"; //config
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
 
@@ -55,10 +54,12 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     public static final String URL_QUOTE = "%22";
 
     private String dbname;
+    private String couchUrl;
     private Boolean connected;
 
-    public CouchDAOImpl(String dbname) {
+    public CouchDAOImpl(String dbname, String couchUrl) {
         this.dbname = dbname;
+        this.couchUrl = couchUrl;
         connected = true;
         try {
             createDatabase();
@@ -90,7 +91,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
 
     @Override
     public String findById(long id) throws IOException {
-        JSONObject jsonObject = getJSON(COUCH_URL + dbname + DESIGN_COUCHVIEW + AUTOINC_FIND + id);
+        JSONObject jsonObject = getJSON(couchUrl + dbname + DESIGN_COUCHVIEW + AUTOINC_FIND + id);
         if (jsonObject.getJSONArray(COUCH_ROWS).size() != 0)
             return jsonObject.getJSONArray(COUCH_ROWS).getJSONObject(0).getJSONObject(COUCH_DOC).getString(LONG_FIELD);
         else throw new IOException(NO_SUCH_ID_FOUND);
@@ -100,7 +101,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     public long findMaxId() {
         JSONObject jsonObject;
         try {
-            jsonObject = getJSON(COUCH_URL + dbname + DESIGN_COUCHVIEW + AUTOINC_MAX);
+            jsonObject = getJSON(couchUrl + dbname + DESIGN_COUCHVIEW + AUTOINC_MAX);
             JSONArray rows = jsonObject.getJSONArray(COUCH_ROWS);
             return rows.getJSONObject(0).getInt(COUCH_KEY);
         } catch (Exception e) {
@@ -119,7 +120,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     }
 
     public List<String> historyByUserId(String userId) throws IOException {
-        JSONObject result = getJSON(COUCH_URL + dbname + DESIGN_COUCHVIEW + USERS_FIND + quote(userId));
+        JSONObject result = getJSON(couchUrl + dbname + DESIGN_COUCHVIEW + USERS_FIND + quote(userId));
         JSONArray arr = result.getJSONArray(COUCH_ROWS);
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < arr.size(); i++) {
@@ -149,12 +150,12 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     }
 
     private JSONObject getDocument(String id) throws IOException {
-        return getJSON(COUCH_URL + dbname + "/" + id);
+        return getJSON(couchUrl + dbname + "/" + id);
     }
 
     private void createDocument(JSONObject doc) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        String url = COUCH_URL + dbname;
+        String url = couchUrl + dbname;
         HttpPost post = new HttpPost(url);
         HttpEntity entity = new StringEntity(doc.toString());
         post.setEntity(entity);
@@ -168,7 +169,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
 
     private void updateDocument(JSONObject doc, String id) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        String url = COUCH_URL + dbname + "/" + id;
+        String url = couchUrl + dbname + "/" + id;
         HttpPut put = new HttpPut(url);
         HttpEntity entity = new StringEntity(doc.toString());
         put.setEntity(entity);
@@ -189,7 +190,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
 
     private void createDatabase() throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        String url = COUCH_URL + dbname + "/";
+        String url = couchUrl + dbname + "/";
         httpclient.execute(new HttpPut(url));
         createView();
     }
