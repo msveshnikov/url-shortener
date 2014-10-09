@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Thumbtack Technologies
+ * Copyright (c) 2014 Thumbtack Technologies
  */
 
 package bench;
@@ -85,6 +85,7 @@ public class ShortenHelper {
         String userId = JSONObject.fromObject(userinfo).getString("id");
         String name = JSONObject.fromObject(userinfo).getString("name");
         String picture = JSONObject.fromObject(userinfo).getString("picture");
+        // TODO: to JSP
         out.println("<img src=\"" + picture + "\"  height=\"42\" width=\"42\">");
         out.println("Welcome, " + name + "<br><br>");
         for (String url : historyByUserId(userId)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. Thumbtack Technologies
+ * Copyright (c) 2014 Thumbtack Technologies
  */
 
 package bench;
@@ -19,7 +19,7 @@ public class UrlShortenerTest {
     @Before
     public void setUp() throws Exception {
         urlShortener = new UrlShortener();
-       // urlShortener.connectCouch();
+        // urlShortener.connectCouch();
     }
 
     @Test

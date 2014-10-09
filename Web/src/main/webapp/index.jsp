@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%--
-  ~ Copyright (c) 2014. Thumbtack Technologies
+  ~ Copyright (c) 2014 Thumbtack Technologies
   --%>
 
 <html>
