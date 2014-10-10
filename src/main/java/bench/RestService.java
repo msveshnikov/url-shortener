@@ -21,11 +21,12 @@ import java.util.Properties;
 public class RestService {
     public static final String URL_PARAM = "url";// const only
     public static final String URL_PARAM_NOT_SET = "url param not set";
+    private static final Logger logger = LoggerFactory.getLogger(RestService.class);
     String DBNAME = "shortener";
     String SHORTEN_VERB = "shorten";
     String COUCH_URL = "http://localhost:5984/";
+    Boolean INC_ALG = false;
     private Shortener shortener;
-    private static final Logger logger = LoggerFactory.getLogger(RestService.class);
 
     @GET
     @Produces("text/plain")
@@ -35,9 +36,10 @@ public class RestService {
         try {
             logger.info("REST request {} {}", shortUrl, longUrl);
             readConfig(context);
-            shortener = new HashShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
-//            shortener = new IncrementalShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
-
+            if (INC_ALG)
+                shortener = new IncrementalShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
+            else
+                shortener = new HashShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
             if (shortUrl.equals("favicon.ico")) return null;
             if (shortUrl.equals(SHORTEN_VERB)) {
                 String base = "";
@@ -76,5 +78,6 @@ public class RestService {
         DBNAME = configuration.getProperty("DBNAME");
         SHORTEN_VERB = configuration.getProperty("SHORTEN_VERB");
         COUCH_URL = configuration.getProperty("COUCH_URL");
+        INC_ALG = Boolean.parseBoolean(configuration.getProperty("INC_ALG"));
     }
 }
