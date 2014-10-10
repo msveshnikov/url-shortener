@@ -79,7 +79,8 @@
     %>
     <a href='<%= auth.buildLoginUrl() %>'>Login with Google+</a><br><br>
     <%
-            /*
+            helper.logger.info("Auth to Google+");
+             /*
              * set the secure state token in session to be able to track what we sent to google
              */
             session.setAttribute("state", auth.getStateToken());
@@ -87,6 +88,7 @@
         } else if (request.getParameter("code") != null && request.getParameter("state") != null
                 && request.getParameter("state").equals(session.getAttribute("state"))) {
 
+            helper.logger.info("Auth succesful!");
             session.removeAttribute("state");
 
 				/*

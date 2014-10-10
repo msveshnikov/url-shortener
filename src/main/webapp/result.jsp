@@ -41,6 +41,7 @@
 <%
     final JspHelper helper = new JspHelper(getServletConfig().getServletContext());
     String shorturl = helper.getShort(request.getParameter("url"), (String) session.getAttribute("userinfo"));
+    helper.logger.info("Web shortening to {}", shorturl);
 %>
 
 <body>

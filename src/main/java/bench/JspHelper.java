@@ -11,6 +11,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class JspHelper {
     String DBNAME;
     String REST_COMMAND;
     String COUCH_URL;
+    public static final Logger logger = LoggerFactory.getLogger(RestService.class);
 
     public JspHelper(ServletContext context) throws IOException {
         String resourceFileName = "/WEB-INF/config/rest.properties";
@@ -44,10 +47,14 @@ public class JspHelper {
     public String getShort(String url, String userinfo) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         String encoded = URLEncoder.encode(url, "ASCII");
-        HttpGet get = new HttpGet(GoogleAuthHelper.HTTP + GoogleAuthHelper.host + REST_COMMAND + encoded);
+        String uri = GoogleAuthHelper.HTTP + GoogleAuthHelper.host + REST_COMMAND + encoded;
+        logger.info("Call REST service url={}", uri);
+        HttpGet get = new HttpGet(uri);
         HttpResponse response = httpclient.execute(get);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            logger.error("Call REST failed, {} {}", response.getStatusLine().getStatusCode(), response.getStatusLine());
             throw new IOException(REST_SERVICE_FAILED + response.getStatusLine());
+        }
         String shorturl = new BasicResponseHandler().handleResponse(response);
         if (userinfo != null && dao.isConnected())
             dao.saveShort(url, JSONObject.fromObject(userinfo).getString(GOOGLE_ID), shorturl);

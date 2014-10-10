@@ -4,6 +4,10 @@
 
 package bench;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -21,6 +25,7 @@ public class RestService {
     String SHORTEN_VERB = "shorten";
     String COUCH_URL = "http://localhost:5984/";
     private Shortener shortener;
+    private static final Logger logger = LoggerFactory.getLogger(RestService.class);
 
     @GET
     @Produces("text/plain")
@@ -28,6 +33,7 @@ public class RestService {
     public Response main(@PathParam("shorturl") String shortUrl, @QueryParam(URL_PARAM) String longUrl,
                          @Context UriInfo ui, @Context ServletContext context) {
         try {
+            logger.info("REST request {} {}", shortUrl, longUrl);
             readConfig(context);
             shortener = new HashShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
 //            shortener = new IncrementalShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
@@ -41,6 +47,7 @@ public class RestService {
             } else
                 return redirect(shortUrl);
         } catch (Exception e) {
+            logger.error("REST failed {}", e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -49,6 +56,7 @@ public class RestService {
         String longUrl = shortener.lengthen(shortUrl);
         if (longUrl.length() < 4 || !longUrl.substring(0, 4).equals("http"))
             longUrl = "http://" + longUrl;
+        logger.info("Redirecting to {}", longUrl);
         return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create(longUrl)).build();
     }
 
@@ -56,6 +64,7 @@ public class RestService {
         if (longUrl == null) throw new Exception(URL_PARAM_NOT_SET);
         String decoded = java.net.URLDecoder.decode(longUrl, "ASCII");
         String shortened = shortener.shorten(decoded);
+        logger.info("Shortening to {}", shortened);
         return Response.status(Response.Status.OK).entity(base + "/" + shortened).build();
     }
 
