@@ -10,7 +10,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 
@@ -30,8 +29,8 @@ public class RestService {
                          @Context UriInfo ui, @Context ServletContext context) {
         try {
             readConfig(context);
-//            shortener = new HashShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
-            shortener = new IncrementalShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
+            shortener = new HashShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
+//            shortener = new IncrementalShortener(new CouchDAOImpl(DBNAME, COUCH_URL));
 
             if (shortUrl.equals("favicon.ico")) return null;
             if (shortUrl.equals(SHORTEN_VERB)) {
@@ -63,9 +62,8 @@ public class RestService {
     void readConfig(ServletContext context) throws IOException {
         if (context == null) return;
         String resourceFileName = "/WEB-INF/config/rest.properties";
-        InputStream is = context.getResourceAsStream(resourceFileName);
         Properties configuration = new Properties();
-        configuration.load(is);
+        configuration.load(context.getResourceAsStream(resourceFileName));
         DBNAME = configuration.getProperty("DBNAME");
         SHORTEN_VERB = configuration.getProperty("SHORTEN_VERB");
         COUCH_URL = configuration.getProperty("COUCH_URL");

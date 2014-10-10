@@ -46,9 +46,9 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     public static final String COUCH_VALUE = "value";
     public static final String COUCH_DOC = "doc";
     public static final String COUCH_VIEWS = "views";
-    public static final String USERS_VIEW = "{\"userid\": {\"map\": \"function(doc) { emit(doc.userid, doc.short) } \"}}";
+    public static final String USERS_VIEW = "  \"userid\": { \"map\": \" function(doc) { emit(doc.userid, doc.short) } \" } ";
     public static final String USERS_FIND = "userid?key=";
-    public static final String AUTOINC_VIEW = "{\"autoinc\": {\"map\": \"function(doc) { emit(doc.myid, null) } \"}}";
+    public static final String AUTOINC_VIEW = "  \"autoinc\": { \"map\": \" function(doc) { emit(doc.myid, null) } \" } ";
     public static final String AUTOINC_FIND = "autoinc?include_docs=true&key=";
     public static final String AUTOINC_MAX = "autoinc?startkey=2000000000&descending=true&limit=1";
     public static final String URL_QUOTE = "%22";
@@ -119,7 +119,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
         return URL_QUOTE + s + URL_QUOTE;
     }
 
-    public List<String> historyByUserId(String userId) throws IOException {
+    public Iterable<String> historyByUserId(String userId) throws IOException {
         JSONObject result = getJSON(couchUrl + dbname + DESIGN_COUCHVIEW + USERS_FIND + quote(userId));
         JSONArray arr = result.getJSONArray(COUCH_ROWS);
         List<String> list = new ArrayList<String>();
@@ -183,7 +183,7 @@ public class CouchDAOImpl implements ShortenerDAO, UsersDAO {
     void createView() throws IOException {
         JSONObject doc = new JSONObject();
         doc.put(COUCH_ID_FIELD, DESIGN);
-        String str = AUTOINC_VIEW + "," + USERS_VIEW;
+        String str = "{ " + AUTOINC_VIEW + " , " + USERS_VIEW + " }";
         doc.put(COUCH_VIEWS, str);
         createDocument(doc);
     }
