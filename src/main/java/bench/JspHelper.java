@@ -27,7 +27,7 @@ public class JspHelper {
     String DBNAME;
     String REST_COMMAND;
     String COUCH_URL;
-    public static final Logger logger = LoggerFactory.getLogger(RestService.class);
+    public static final Logger logger = LoggerFactory.getLogger(JspHelper.class);
 
     public JspHelper(ServletContext context) throws IOException {
         String resourceFileName = "/WEB-INF/config/rest.properties";

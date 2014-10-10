@@ -12,7 +12,7 @@ Technologies: node.js, ruby, python, java, sql, mongo, redis, cassandra, mysql, 
 
 + 3-х слойная архитектура: Presentation, Service, DAO. Зависимости между слоями через интерфейсы.
 + Нужна конфигурация. В коде никаких литералов, неизменяемые - константами, изменяемые - в конфигурации.
-- Тест на моке DAO
++ Тест на моке DAO
 + Логирование slf4j + logback/log4j
 
 
