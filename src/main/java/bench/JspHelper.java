@@ -23,11 +23,11 @@ import java.util.Properties;
 public class JspHelper {
     public static final String GOOGLE_ID = "id";
     public static final String REST_SERVICE_FAILED = "REST service failed: ";
+    public static final Logger logger = LoggerFactory.getLogger(JspHelper.class);
     public final UsersDAO dao;
     String DBNAME;
     String REST_COMMAND;
     String COUCH_URL;
-    public static final Logger logger = LoggerFactory.getLogger(JspHelper.class);
 
     public JspHelper(ServletContext context) throws IOException {
         String resourceFileName = "/WEB-INF/config/rest.properties";
@@ -41,6 +41,7 @@ public class JspHelper {
         GoogleAuthHelper.CALLBACK = configuration.getProperty("CALLBACK");
         GoogleAuthHelper.CLIENT_ID = configuration.getProperty("CLIENT_ID");
         GoogleAuthHelper.CLIENT_SECRET = configuration.getProperty("CLIENT_SECRET");
+        GoogleAuthHelper.CLEAR_PORT = Boolean.parseBoolean(configuration.getProperty("CLEAR_PORT"));
         dao = new CouchDAOImpl(DBNAME, COUCH_URL);
     }
 

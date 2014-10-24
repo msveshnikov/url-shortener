@@ -25,6 +25,7 @@ public class RestService {
     String DBNAME = "shortener";
     String SHORTEN_VERB = "shorten";
     String COUCH_URL = "http://localhost:5984/";
+    Boolean CLEAR_PORT;
     Boolean INC_ALG = false;
     private Shortener shortener;
 
@@ -44,7 +45,8 @@ public class RestService {
             if (shortUrl.equals(SHORTEN_VERB)) {
                 String base = "";
                 if (ui != null)
-                    base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() + ":" + ui.getBaseUri().getPort();
+                    base = ui.getBaseUri().getScheme() + "://" + ui.getBaseUri().getHost() +
+                            (CLEAR_PORT ? "" : ":" + ui.getBaseUri().getPort());
                 return shorten(longUrl, base);
             } else
                 return redirect(shortUrl);
@@ -53,6 +55,13 @@ public class RestService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @GET
+    @Path("/")
+    public Response main() {
+        return Response.status(Response.Status.MOVED_PERMANENTLY).location(URI.create("/shortener")).build();
+    }
+
 
     Response redirect(String shortUrl) throws Exception {
         String longUrl = shortener.lengthen(shortUrl);
@@ -78,6 +87,7 @@ public class RestService {
         DBNAME = configuration.getProperty("DBNAME");
         SHORTEN_VERB = configuration.getProperty("SHORTEN_VERB");
         COUCH_URL = configuration.getProperty("COUCH_URL");
+        CLEAR_PORT = Boolean.parseBoolean(configuration.getProperty("CLEAR_PORT"));
         INC_ALG = Boolean.parseBoolean(configuration.getProperty("INC_ALG"));
     }
 }

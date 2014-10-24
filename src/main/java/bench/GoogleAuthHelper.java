@@ -32,6 +32,7 @@ public final class GoogleAuthHelper {
     public static String CLIENT_ID;
     public static String CLIENT_SECRET;
     public static String host = "localhost:8080"; // for jUnit
+    public static boolean CLEAR_PORT;
     private final GoogleAuthorizationCodeFlow flow;
     private String stateToken;
 
@@ -47,6 +48,9 @@ public final class GoogleAuthHelper {
      * Callback URI that google will redirect to after successful authentication
      */
     private String callbackUri() {
+        int i = host.indexOf(':');
+        if (CLEAR_PORT && i >= 0)
+            host = host.substring(0, i);
         return HTTP + host + CALLBACK;
     }
 
